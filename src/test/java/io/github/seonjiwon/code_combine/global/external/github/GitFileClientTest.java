@@ -51,7 +51,7 @@ class GitFileClientTest {
         String sha = "e57ecf7aa4f57934d8311edb3ce1afa1ec75e122";
 
         // when
-        List<String> filenames = gitClient.fetchFilenames(OWNER, REPO, sha);
+        List<String> filenames = gitClient.fetchFilePath(OWNER, REPO, sha);
 
         // then
         assertThat(filenames)
@@ -71,7 +71,7 @@ class GitFileClientTest {
         String sha = "e57ecf7aa4f57934d8311edb3ce1afa1ec75e122";
 
         // when
-        List<String> filenames = gitClient.fetchFilenames(OWNER, REPO, sha);
+        List<String> filenames = gitClient.fetchFilePath(OWNER, REPO, sha);
         List<String> javaFiles = filenames.stream()
                                           .filter(name -> name.endsWith(".java"))
                                           .toList();
@@ -127,16 +127,19 @@ class GitFileClientTest {
     @DisplayName("전체 흐름 테스트")
     void fullWorkFlow() throws Exception{
         // given
-        LocalDateTime since = LocalDateTime.of(2026, 1, 6, 0, 0, 0);
-        LocalDateTime until = LocalDateTime.of(2026, 1, 6, 23, 59, 59);
+        LocalDateTime since = LocalDateTime.of(2026, 1, 11, 15, 0, 0);
+        LocalDateTime until = LocalDateTime.of(2026, 1, 12, 14, 59, 59);
 
         // when
         List<String> commitShas = gitClient.fetchCommitShas(OWNER, REPO, since, until);
         assertThat(commitShas).isNotEmpty();
+        log.debug("commitShas: {}", commitShas.toString());
 
         String firstSha = commitShas.get(0);
-        List<String> filenames = gitClient.fetchFilenames(OWNER, REPO, firstSha);
+        List<String> filenames = gitClient.fetchFilePath(OWNER, REPO, firstSha);
         assertThat(filenames).isNotEmpty();
+
+        log.debug("filename: {}",filenames.toString());
 
         List<String> javaFiles = filenames.stream()
                                      .filter(name -> name.endsWith(".java"))
