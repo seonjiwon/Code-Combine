@@ -37,8 +37,12 @@ public class GitClient {
     private String jsonAcceptHeader;
 
 
-    public List<String> fetchCommitShas(String owner, String repo, LocalDateTime since,
-                               LocalDateTime until) {
+    public List<String> fetchCommitShas(
+        String owner,
+        String repo,
+        LocalDateTime since,
+        LocalDateTime until
+    ) {
         ZonedDateTime sinceUtc = since.atZone(ZoneOffset.UTC);
         ZonedDateTime untilUtc = until.atZone(ZoneOffset.UTC);
 
@@ -53,7 +57,7 @@ public class GitClient {
     }
 
 
-    public List<String> fetchFilenames(String owner, String repo, String sha) {
+    public List<String> fetchFilePath(String owner, String repo, String sha) {
         String url = String.format("%s/repos/%s/%s/commits/%s", baseUrl, owner, repo, sha);
 
         log.debug("Fetching commit files: {}", url);
@@ -65,7 +69,7 @@ public class GitClient {
 
 
     public String fetchSourceCode(String owner, String repo, String path, String ref) {
-        String url = buildFileUrl(owner, repo, path , ref);
+        String url = buildFileUrl(owner, repo, path, ref);
 
         log.debug("Fetching source code: {}", url);
 
