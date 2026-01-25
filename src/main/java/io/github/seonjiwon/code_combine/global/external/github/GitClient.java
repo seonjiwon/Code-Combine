@@ -49,7 +49,7 @@ public class GitClient {
         String url = String.format("%s/repos/%s/%s/commits?since=%s&until=%s", baseUrl, owner, repo,
             sinceUtc, untilUtc);
 
-        log.debug("Fetching commits: {}", url);
+        log.info("Fetching commits: {}", url);
 
         String response = fetchContentAsJson(url);
 
@@ -60,7 +60,7 @@ public class GitClient {
     public List<String> fetchFilePath(String owner, String repo, String sha) {
         String url = String.format("%s/repos/%s/%s/commits/%s", baseUrl, owner, repo, sha);
 
-        log.debug("Fetching commit files: {}", url);
+        log.info("Fetching commit files: {}", url);
 
         String response = fetchContentAsJson(url);
 
@@ -71,7 +71,7 @@ public class GitClient {
     public String fetchSourceCode(String owner, String repo, String path, String ref) {
         String url = buildFileUrl(owner, repo, path, ref);
 
-        log.debug("Fetching source code: {}", url);
+        log.info("Fetching source code: {}", url);
 
         return fetchContent(url);
     }
@@ -79,7 +79,7 @@ public class GitClient {
     public String fetchReadme(String owner, String repo, String path, String ref) {
         String url = buildFileUrl(owner, repo, path + "", ref);
 
-        log.debug("Fetching README: {}", url);
+        log.info("Fetching README: {}", url);
 
         return fetchContent(url);
     }

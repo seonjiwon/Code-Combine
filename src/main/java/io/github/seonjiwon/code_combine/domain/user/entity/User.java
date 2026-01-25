@@ -29,11 +29,15 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String username;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(unique = true, length = 100)
     private String email;
 
     @Column(length = 500)
     private String avatarUrl;
 
     private LocalDateTime lastSyncAt;
+
+    public void updateLastSyncAt() {
+        this.lastSyncAt = LocalDateTime.now();
+    }
 }
