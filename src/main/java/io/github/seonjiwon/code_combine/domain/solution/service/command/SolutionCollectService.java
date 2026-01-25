@@ -36,7 +36,7 @@ public class SolutionCollectService {
 
         List<String> commitShas = gitClient.fetchCommitShas(owner, repo, since, until);
 
-        log.debug("Fetch Commit Response: {}", commitShas);
+        log.info("Fetch Commit Response: {}", commitShas);
 
         return GitResponseConverter.toCommitList(commitShas);
     }
@@ -44,7 +44,7 @@ public class SolutionCollectService {
     public List<FileInfo> fetchFilePaths(String owner, String repo, String commitSha) {
         List<String> filePaths = gitClient.fetchFilePath(owner, repo, commitSha);
 
-        log.debug("Fetch FilePath Response: {}", filePaths);
+        log.info("Fetch FilePath Response: {}", filePaths);
 
         return GitResponseConverter.toFileInfos(filePaths);
     }
@@ -54,8 +54,8 @@ public class SolutionCollectService {
         String sourceCode = gitClient.fetchSourceCode(owner, repo, sourceCodePath, commitSha);
         String readMe = gitClient.fetchSourceCode(owner, repo, readmePath, commitSha);
 
-        log.debug("Fetch SourceCode: {}", sourceCode);
-        log.debug("Fetch ReadMe: {}", readMe);
+        log.info("Fetch SourceCode: {}", sourceCode);
+        log.info("Fetch ReadMe: {}", readMe);
 
         return GitResponseConverter.toSolutionData(sourceCode, readMe);
     }

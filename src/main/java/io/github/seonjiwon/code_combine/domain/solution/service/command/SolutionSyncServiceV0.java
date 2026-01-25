@@ -30,7 +30,7 @@ public class SolutionSyncServiceV0 implements SolutionSyncService {
     public void syncTodaySolutions(User user, String owner, String repo) {
         // 1. Collect 서비스로 부터 커밋 목록 조회
         List<CommitInfo> commitInfos = solutionCollectService.fetchCommitShas(owner, repo);
-        log.debug("{} 개의 커밋을 찾았습니다.", commitInfos.size());
+        log.info("{} 개의 커밋을 찾았습니다.", commitInfos.size());
 
         // 2. 각 커밋 동기화
         for (CommitInfo commitInfo : commitInfos) {
@@ -41,7 +41,7 @@ public class SolutionSyncServiceV0 implements SolutionSyncService {
     public void syncCommit(User user, String owner, String repo, String commitSha) {
         // 1. 이미 존재하는 커밋인지 확인
         if (solutionRepository.existsByCommitSha(commitSha)) {
-            log.debug("커밋이 이미 동기화 되었습니다: {}", commitSha);
+            log.info("커밋이 이미 동기화 되었습니다: {}", commitSha);
         }
 
         // 2. Collect 서비스로부터 파일 목록 조회
@@ -89,7 +89,7 @@ public class SolutionSyncServiceV0 implements SolutionSyncService {
                                     .build();
 
         solutionRepository.save(solution);
-        log.debug("풀이 저장: 문제 {}", problemInfo.getProblemNumber());
+        log.info("풀이 저장: 문제 {}", problemInfo.getProblemNumber());
     }
 
     private ProblemInfo extractProblemInfo(String filePath) {

@@ -1,4 +1,4 @@
-package io.github.seonjiwon.code_combine.domain.user.exception;
+package io.github.seonjiwon.code_combine.domain.user.code;
 
 import io.github.seonjiwon.code_combine.global.code.error.BaseErrorCode;
 import lombok.AllArgsConstructor;

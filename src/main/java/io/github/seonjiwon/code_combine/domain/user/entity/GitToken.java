@@ -35,7 +35,7 @@ public class GitToken {
     private User user;
 
     @Column(nullable = false, length = 500)
-    private String encryptedToken;
+    private String token;
 
     private LocalDateTime issuedAt;
 
@@ -44,4 +44,8 @@ public class GitToken {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TokenStatus status;
+
+    public void deactivate() {
+        this.status = TokenStatus.DEACTIVATED;
+    }
 }
