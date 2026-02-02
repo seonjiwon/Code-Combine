@@ -1,8 +1,8 @@
 package io.github.seonjiwon.code_combine.domain.user.service;
 
-import io.github.seonjiwon.code_combine.domain.user.entity.GitToken;
-import io.github.seonjiwon.code_combine.domain.user.entity.TokenStatus;
-import io.github.seonjiwon.code_combine.domain.user.entity.User;
+import io.github.seonjiwon.code_combine.domain.user.domain.GitToken;
+import io.github.seonjiwon.code_combine.domain.user.domain.TokenStatus;
+import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.repository.GitTokenRepository;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;

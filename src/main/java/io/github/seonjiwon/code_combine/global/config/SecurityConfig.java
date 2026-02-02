@@ -1,7 +1,7 @@
 package io.github.seonjiwon.code_combine.global.config;
 
-import io.github.seonjiwon.code_combine.global.security.oauth.OAuth2LoginSuccessHandler;
 import io.github.seonjiwon.code_combine.global.security.filter.JwtAuthenticationFilter;
+import io.github.seonjiwon.code_combine.global.security.oauth.OAuth2LoginSuccessHandler;
 import io.github.seonjiwon.code_combine.global.security.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +21,7 @@ public class SecurityConfig {
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final JwtProvider jwtProvider;
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -36,7 +37,7 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/auth/**",
+                    "/oauth/**",
                     // Swagger
                     "/swagger-ui/**",
                     "/v3/api-docs/**"
@@ -47,6 +48,7 @@ public class SecurityConfig {
             .oauth2Login(oauth2 -> oauth2
                 .successHandler(oAuth2LoginSuccessHandler)
             )
+
 
             .addFilterBefore(
                 new JwtAuthenticationFilter(jwtProvider),

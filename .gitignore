@@ -39,5 +39,3 @@ out/
 ### 환경 변수 및 보안 파일 ###
 /src/main/resources/application-dev.yml
 
-### 데이터베이스 파일 무시
-data.sql

@@ -1,8 +1,11 @@
 package io.github.seonjiwon.code_combine.domain.user.service;
 
+import io.github.seonjiwon.code_combine.domain.user.code.UserErrorCode;
+import io.github.seonjiwon.code_combine.domain.user.dto.LoginSuccessResponse;
 import io.github.seonjiwon.code_combine.domain.user.dto.OAuth2UserInfo;
-import io.github.seonjiwon.code_combine.domain.user.entity.User;
+import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
+import io.github.seonjiwon.code_combine.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,5 +37,17 @@ public class UserService {
         log.info("새로운 사용자 생성: {}", savedUser.getEmail());
 
         return savedUser;
+    }
+
+    public LoginSuccessResponse getLoginSuccessUserInfo(Long userId) {
+        User user = userRepository.findById(userId)
+                                  .orElseThrow(
+                                      () -> new CustomException(UserErrorCode.USER_NOT_FOUND));
+
+        return LoginSuccessResponse.builder()
+                                   .userId(user.getId())
+                                   .username(user.getUsername())
+                                   .avatarUrl(user.getAvatarUrl())
+                                   .build();
     }
 }

@@ -1,6 +1,6 @@
 package io.github.seonjiwon.code_combine.domain.user.repository;
 
-import io.github.seonjiwon.code_combine.domain.user.entity.User;
+import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

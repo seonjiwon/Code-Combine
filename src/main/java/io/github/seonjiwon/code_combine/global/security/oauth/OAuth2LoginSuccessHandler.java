@@ -2,7 +2,7 @@ package io.github.seonjiwon.code_combine.global.security.oauth;
 
 import io.github.seonjiwon.code_combine.domain.repo.repository.RepoRepository;
 import io.github.seonjiwon.code_combine.domain.user.dto.OAuth2UserInfo;
-import io.github.seonjiwon.code_combine.domain.user.entity.User;
+import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.service.TokenService;
 import io.github.seonjiwon.code_combine.domain.user.service.UserService;
 import io.github.seonjiwon.code_combine.global.security.code.OAuth2ErrorCode;

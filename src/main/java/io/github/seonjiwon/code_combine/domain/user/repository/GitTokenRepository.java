@@ -1,7 +1,7 @@
 package io.github.seonjiwon.code_combine.domain.user.repository;
 
-import io.github.seonjiwon.code_combine.domain.user.entity.GitToken;
-import io.github.seonjiwon.code_combine.domain.user.entity.TokenStatus;
+import io.github.seonjiwon.code_combine.domain.user.domain.GitToken;
+import io.github.seonjiwon.code_combine.domain.user.domain.TokenStatus;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

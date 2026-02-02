@@ -3,13 +3,11 @@ package io.github.seonjiwon.code_combine.domain.solution.service.command;
 import io.github.seonjiwon.code_combine.domain.problem.domain.Problem;
 import io.github.seonjiwon.code_combine.domain.problem.repository.ProblemRepository;
 import io.github.seonjiwon.code_combine.domain.solution.domain.Solution;
-import io.github.seonjiwon.code_combine.domain.solution.dto.CommitInfo;
-import io.github.seonjiwon.code_combine.domain.solution.dto.FileInfo;
+import io.github.seonjiwon.code_combine.domain.solution.dto.CommitDetail;
 import io.github.seonjiwon.code_combine.domain.solution.dto.ProblemInfo;
 import io.github.seonjiwon.code_combine.domain.solution.dto.SolutionData;
 import io.github.seonjiwon.code_combine.domain.solution.repository.SolutionRepository;
-import io.github.seonjiwon.code_combine.domain.solution.service.SolutionSyncService;
-import io.github.seonjiwon.code_combine.domain.user.entity.User;
+import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +27,12 @@ public class SolutionSyncServiceV0 implements SolutionSyncService {
     @Override
     public void syncTodaySolutions(User user, String owner, String repo) {
         // 1. Collect 서비스로 부터 커밋 목록 조회
-        List<CommitInfo> commitInfos = solutionCollectService.fetchCommitShas(owner, repo);
-        log.info("{} 개의 커밋을 찾았습니다.", commitInfos.size());
+        List<String> commitShas = solutionCollectService.fetchCommitShas(owner, repo);
+        log.info("{} 개의 커밋을 찾았습니다.", commitShas.size());
 
         // 2. 각 커밋 동기화
-        for (CommitInfo commitInfo : commitInfos) {
-            syncCommit(user, owner, repo, commitInfo.getSha());
+        for (String commitSha : commitShas) {
+            syncCommit(user, owner, repo, commitSha);
         }
     }
 
@@ -42,16 +40,17 @@ public class SolutionSyncServiceV0 implements SolutionSyncService {
         // 1. 이미 존재하는 커밋인지 확인
         if (solutionRepository.existsByCommitSha(commitSha)) {
             log.info("커밋이 이미 동기화 되었습니다: {}", commitSha);
+            return;
         }
 
         // 2. Collect 서비스로부터 파일 목록 조회
-        List<FileInfo> fileInfos = solutionCollectService.fetchFilePaths(owner, repo, commitSha);
+        CommitDetail commitDetail = solutionCollectService.fetchCommitDetail(owner, repo,
+            commitSha);
 
         String readmePath = null;
         String sourceCodePath = null;
 
-        for (FileInfo fileInfo : fileInfos) {
-            String filePath = fileInfo.getFilePath();
+        for (String filePath : commitDetail.getFilePaths()) {
             if (filePath.endsWith("README.md")) {
                 readmePath = filePath;
             } else {
@@ -86,6 +85,7 @@ public class SolutionSyncServiceV0 implements SolutionSyncService {
                                     .sourceCode(solutionData.getSourceCode())
                                     .commitSha(commitSha)
                                     .filePath(sourceCodePath)
+                                    .solvedAt(commitDetail.getCommitDate())
                                     .build();
 
         solutionRepository.save(solution);
