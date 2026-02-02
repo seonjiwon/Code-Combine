@@ -1,13 +1,16 @@
-package io.github.seonjiwon.code_combine.global.external.github;
+package io.github.seonjiwon.code_combine.domain.solution.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.seonjiwon.code_combine.domain.solution.dto.CommitDetail;
 import io.github.seonjiwon.code_combine.global.exception.CustomException;
 import io.github.seonjiwon.code_combine.global.external.exception.GitErrorCode;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -57,14 +60,14 @@ public class GitClient {
     }
 
 
-    public List<String> fetchFilePath(String owner, String repo, String sha) {
+    public CommitDetail fetchCommitDetail(String owner, String repo, String sha) {
         String url = String.format("%s/repos/%s/%s/commits/%s", baseUrl, owner, repo, sha);
 
         log.info("Fetching commit files: {}", url);
 
         String response = fetchContentAsJson(url);
 
-        return parseFilenames(response);
+        return parseCommitDetail(response);
     }
 
 
@@ -121,18 +124,28 @@ public class GitClient {
         }
     }
 
-    private List<String> parseFilenames(String jsonResponse) {
+    private CommitDetail parseCommitDetail(String jsonResponse) {
         try {
             JsonNode root = objectMapper.readTree(jsonResponse);
+
+            // 1. date 파싱
+            String dateStr = root.get("commit").get("author").get("date").asText();
+            LocalDateTime commitDate = LocalDateTime.parse(dateStr, DateTimeFormatter.ISO_INSTANT
+                .withZone(ZoneId.of("Asia/Seoul")));
+
+            // 2. 파일 경로 파싱
             JsonNode filesNode = root.get("files");
 
-            List<String> filenames = new ArrayList<>();
+            List<String> filePaths = new ArrayList<>();
 
             for (JsonNode fileNode : filesNode) {
                 String filename = fileNode.get("filename").asText();
-                filenames.add(filename);
+                filePaths.add(filename);
             }
-            return filenames;
+            return CommitDetail.builder()
+                               .filePaths(filePaths)
+                               .commitDate(commitDate)
+                               .build();
         } catch (JsonProcessingException e) {
             throw new CustomException(GitErrorCode.GITHUB_JSON_PARSE_ERROR);
         }

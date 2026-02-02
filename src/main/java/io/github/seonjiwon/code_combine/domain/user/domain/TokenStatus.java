@@ -1,4 +1,4 @@
-package io.github.seonjiwon.code_combine.domain.user.entity;
+package io.github.seonjiwon.code_combine.domain.user.domain;
 
 public enum TokenStatus {
     ACTIVATED,

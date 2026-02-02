@@ -1,7 +1,7 @@
 package io.github.seonjiwon.code_combine.domain.solution.domain;
 
 import io.github.seonjiwon.code_combine.domain.problem.domain.Problem;
-import io.github.seonjiwon.code_combine.domain.user.entity.User;
+import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,8 +52,8 @@ public class Solution extends BaseEntity {
 
     private String filePath;
 
-//    @Column(nullable = false)
-//    private LocalDateTime solvedAt;
+    @Column(nullable = false)
+    private LocalDateTime solvedAt;
 //
 //    private int memoryUsage;
 //
