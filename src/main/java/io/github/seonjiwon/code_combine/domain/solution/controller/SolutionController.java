@@ -1,7 +1,7 @@
 package io.github.seonjiwon.code_combine.domain.solution.controller;
 
+import io.github.seonjiwon.code_combine.domain.solution.dto.DashboardResponse;
 import io.github.seonjiwon.code_combine.domain.solution.dto.SolutionResponse;
-import io.github.seonjiwon.code_combine.domain.solution.dto.WeeklyCommitInfo;
 import io.github.seonjiwon.code_combine.domain.solution.service.command.SolutionSyncService;
 import io.github.seonjiwon.code_combine.domain.solution.service.query.CommitQueryService;
 import io.github.seonjiwon.code_combine.domain.solution.service.query.SolutionQueryService;
@@ -43,8 +43,8 @@ public class SolutionController {
     }
 
     @GetMapping("/dashboard")
-    public CustomResponse<WeeklyCommitInfo> getWeeklyCommitList() {
-        WeeklyCommitInfo weeklyCommitInfo = commitQueryService.getWeeklyCommitInfo();
+    public CustomResponse<DashboardResponse.WeeklyCommitInfo> getWeeklyCommitList() {
+        DashboardResponse.WeeklyCommitInfo weeklyCommitInfo = commitQueryService.getWeeklyCommitInfo();
         return CustomResponse.onSuccess(weeklyCommitInfo);
     }
 
