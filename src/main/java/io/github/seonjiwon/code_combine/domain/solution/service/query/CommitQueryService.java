@@ -8,10 +8,8 @@ import io.github.seonjiwon.code_combine.domain.solution.dto.WeeklyStat;
 import io.github.seonjiwon.code_combine.domain.solution.repository.SolutionRepository;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class SolutionCommitQueryService {
+public class CommitQueryService {
 
     private final UserRepository userRepository;
     private final SolutionRepository solutionRepository;

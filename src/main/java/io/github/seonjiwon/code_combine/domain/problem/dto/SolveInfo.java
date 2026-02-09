@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class SolveInfo {
+    private Long problemId;
     private int problemNumber;
     private String problemName;
     private int solvedUserCount;

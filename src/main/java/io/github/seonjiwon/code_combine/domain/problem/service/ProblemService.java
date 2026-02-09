@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProblemService {
 
     private final ProblemRepository problemRepository;
-    private final SolutionRepository solutionRepository;
 
     private static final int DEFAULT_PAGE_SIZE = 10;
 
@@ -71,10 +70,12 @@ public class ProblemService {
         // 8. SolveInfo 변환
         List<SolveInfo> solveInfos = problems.stream()
                                              .map(problem -> {
-                                                 List<UserSolver> problemSolvers = solversByProblem.get(problem.getId());
+                                                 List<UserSolver> problemSolvers = solversByProblem.get(
+                                                     problem.getId());
 
                                                  List<SolvedUser> solvedUsers = problemSolvers.stream()
-                                                                                              .map(problemSolver -> SolvedUser.builder()
+                                                                                              .map(
+                                                                                                  problemSolver -> SolvedUser.builder()
                                                                                                                              .userId(problemSolver.getUserId())
                                                                                                                              .username(problemSolver.getUsername())
                                                                                                                              .avatarUrl(problemSolver.getAvatarUrl())
@@ -82,11 +83,10 @@ public class ProblemService {
                                                                                               .toList();
 
                                                  return SolveInfo.builder()
-                                                                 .problemNumber(
-                                                                     problem.getProblemNumber())
+                                                                 .problemId(problem.getId())
+                                                                 .problemNumber(problem.getProblemNumber())
                                                                  .problemName(problem.getTitle())
-                                                                 .solvedUserCount(
-                                                                     solvedUsers.size())
+                                                                 .solvedUserCount(solvedUsers.size())
                                                                  .build();
                                              })
                                              .toList();

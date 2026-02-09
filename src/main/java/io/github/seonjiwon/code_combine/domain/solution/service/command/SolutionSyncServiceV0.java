@@ -7,6 +7,7 @@ import io.github.seonjiwon.code_combine.domain.solution.dto.CommitDetail;
 import io.github.seonjiwon.code_combine.domain.solution.dto.ProblemInfo;
 import io.github.seonjiwon.code_combine.domain.solution.dto.SolutionData;
 import io.github.seonjiwon.code_combine.domain.solution.repository.SolutionRepository;
+import io.github.seonjiwon.code_combine.domain.solution.utils.SolutionFetchService;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SolutionSyncServiceV0 implements SolutionSyncService {
 
-    private final SolutionCollectService solutionCollectService;
+    private final SolutionFetchService solutionFetchService;
     private final SolutionRepository solutionRepository;
     private final ProblemRepository problemRepository;
 
     @Override
     public void syncTodaySolutions(User user, String owner, String repo) {
         // 1. Collect 서비스로 부터 커밋 목록 조회
-        List<String> commitShas = solutionCollectService.fetchCommitShas(owner, repo);
+        List<String> commitShas = solutionFetchService.fetchCommitShas(owner, repo);
         log.info("{} 개의 커밋을 찾았습니다.", commitShas.size());
 
         // 2. 각 커밋 동기화
@@ -44,7 +45,7 @@ public class SolutionSyncServiceV0 implements SolutionSyncService {
         }
 
         // 2. Collect 서비스로부터 파일 목록 조회
-        CommitDetail commitDetail = solutionCollectService.fetchCommitDetail(owner, repo,
+        CommitDetail commitDetail = solutionFetchService.fetchCommitDetail(owner, repo,
             commitSha);
 
         String readmePath = null;
@@ -59,7 +60,7 @@ public class SolutionSyncServiceV0 implements SolutionSyncService {
         }
 
         // 3. 소스코드 + readme 가져오기
-        SolutionData solutionData = solutionCollectService.fetchSolutionData(owner, repo,
+        SolutionData solutionData = solutionFetchService.fetchSolutionData(owner, repo,
             sourceCodePath, readmePath,
             commitSha);
 

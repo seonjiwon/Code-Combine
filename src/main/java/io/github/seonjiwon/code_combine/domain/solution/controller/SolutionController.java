@@ -1,8 +1,10 @@
 package io.github.seonjiwon.code_combine.domain.solution.controller;
 
+import io.github.seonjiwon.code_combine.domain.solution.dto.SolutionResponse;
 import io.github.seonjiwon.code_combine.domain.solution.dto.WeeklyCommitInfo;
 import io.github.seonjiwon.code_combine.domain.solution.service.command.SolutionSyncService;
-import io.github.seonjiwon.code_combine.domain.solution.service.query.SolutionCommitQueryService;
+import io.github.seonjiwon.code_combine.domain.solution.service.query.CommitQueryService;
+import io.github.seonjiwon.code_combine.domain.solution.service.query.SolutionQueryService;
 import io.github.seonjiwon.code_combine.domain.user.code.UserErrorCode;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
@@ -20,8 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class SolutionController {
 
     private final SolutionSyncService solutionSyncService;
+    private final SolutionQueryService solutionQueryService;
     private final UserRepository userRepository;
-    private final SolutionCommitQueryService solutionCommitQueryService;
+    private final CommitQueryService commitQueryService;
 
     @GetMapping("/sync")
     public CustomResponse<String> codeSync() {
@@ -41,7 +44,16 @@ public class SolutionController {
 
     @GetMapping("/dashboard")
     public CustomResponse<WeeklyCommitInfo> getWeeklyCommitList() {
-        WeeklyCommitInfo weeklyCommitInfo = solutionCommitQueryService.getWeeklyCommitInfo();
+        WeeklyCommitInfo weeklyCommitInfo = commitQueryService.getWeeklyCommitInfo();
         return CustomResponse.onSuccess(weeklyCommitInfo);
+    }
+
+    @GetMapping("/{problemId}/solve")
+    public CustomResponse<SolutionResponse.Detail> getDetailSolution(
+        @PathVariable Long problemId
+    ) {
+        SolutionResponse.Detail detailSolution = solutionQueryService.getDetailSolution(problemId);
+
+        return CustomResponse.onSuccess(detailSolution);
     }
 }
