@@ -11,4 +11,6 @@ public interface SolutionRepository extends JpaRepository<Solution, Long> {
 
     List<Solution> findBySolvedAtGreaterThanEqualAndSolvedAtLessThan(LocalDateTime start,
                                                   LocalDateTime end);
+
+    List<Solution> findByProblemIdIn(List<Long> problemIds);
 }
