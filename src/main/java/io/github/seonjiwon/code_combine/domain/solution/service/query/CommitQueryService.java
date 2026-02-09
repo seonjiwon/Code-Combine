@@ -1,10 +1,12 @@
 package io.github.seonjiwon.code_combine.domain.solution.service.query;
 
 
+import static io.github.seonjiwon.code_combine.domain.solution.dto.DashboardResponse.*;
+
 import io.github.seonjiwon.code_combine.domain.solution.domain.Solution;
-import io.github.seonjiwon.code_combine.domain.solution.dto.UserCommit;
-import io.github.seonjiwon.code_combine.domain.solution.dto.WeeklyCommitInfo;
-import io.github.seonjiwon.code_combine.domain.solution.dto.WeeklyStat;
+import io.github.seonjiwon.code_combine.domain.solution.dto.DashboardResponse;
+import io.github.seonjiwon.code_combine.domain.solution.dto.DashboardResponse.UserCommit;
+import io.github.seonjiwon.code_combine.domain.solution.dto.DashboardResponse.WeeklyCommitInfo;
 import io.github.seonjiwon.code_combine.domain.solution.repository.SolutionRepository;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
@@ -35,7 +37,8 @@ public class CommitQueryService {
 
         // 테스트용 하드 코딩 값
         LocalDateTime sunday = LocalDateTime.of(2026, 1, 11, 15, 0, 0);    // 일요일 KST 00:00 → UTC
-        LocalDateTime nextSunday = LocalDateTime.of(2026, 1, 18, 15, 0, 0); // 다음 일요일 KST 00:00 → UTC
+        LocalDateTime nextSunday = LocalDateTime.of(2026, 1, 18, 15, 0,
+            0); // 다음 일요일 KST 00:00 → UTC
 
         List<Solution> solutions = solutionRepository.findBySolvedAtGreaterThanEqualAndSolvedAtLessThan(
             sunday, nextSunday);
@@ -47,8 +50,9 @@ public class CommitQueryService {
                                                                                  solution -> solution.getSolvedAt()
                                                                                                      .toLocalDate(),
                                                                                  Collectors.groupingBy(
-                                                                                     solution -> solution.getUser()
-                                                                                                         .getId(),
+                                                                                     solution ->
+                                                                                         solution.getUser()
+                                                                                                 .getId(),
                                                                                      Collectors.counting()
                                                                                  )
                                                                              ));
@@ -62,7 +66,7 @@ public class CommitQueryService {
                                          ));
 
         // 3. 변환
-        List<WeeklyStat> weeklyStats = new ArrayList<>();
+        List<WeeklyState> weeklyStats = new ArrayList<>();
 
         // 3-1. 각 요일 마다 사용자 정보 + 커밋 수 가져오기
         for (int i = 0; i < 7; i++) {
@@ -83,7 +87,7 @@ public class CommitQueryService {
                 userCommits.add(userCommit);
             }
 
-            WeeklyStat weeklyStat = WeeklyStat.builder()
+            WeeklyState weeklyStat = WeeklyState.builder()
                                               .date(date)
                                               .dailyTotalUser(userCommits.size())
                                               .userCommits(userCommits)

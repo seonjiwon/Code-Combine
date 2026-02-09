@@ -1,7 +1,7 @@
 package io.github.seonjiwon.code_combine.domain.problem.controller;
 
-import io.github.seonjiwon.code_combine.domain.problem.dto.ProblemSolveList;
-import io.github.seonjiwon.code_combine.domain.problem.service.ProblemService;
+import io.github.seonjiwon.code_combine.domain.problem.dto.ProblemsResponse.ProblemSolveList;
+import io.github.seonjiwon.code_combine.domain.problem.service.query.v0.ProblemQueryServiceV0;
 import io.github.seonjiwon.code_combine.global.CustomResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProblemController {
 
-    private final ProblemService problemService;
+    private final ProblemQueryServiceV0 problemService;
 
     @GetMapping("/problems")
     public CustomResponse<ProblemSolveList> getProblemList(
