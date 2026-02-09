@@ -1,9 +1,7 @@
-package io.github.seonjiwon.code_combine.domain.solution.service.command;
+package io.github.seonjiwon.code_combine.domain.solution.utils;
 
 import io.github.seonjiwon.code_combine.domain.solution.dto.CommitDetail;
 import io.github.seonjiwon.code_combine.domain.solution.dto.SolutionData;
-import io.github.seonjiwon.code_combine.domain.solution.utils.GitClient;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class SolutionCollectService {
+public class SolutionFetchService {
 
     private final GitClient gitClient;
 
