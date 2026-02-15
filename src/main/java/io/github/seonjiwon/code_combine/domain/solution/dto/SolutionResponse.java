@@ -14,6 +14,7 @@ public class SolutionResponse {
 
     @Builder
     public record Submission (
+        Long solutionId,
         String username,
         String language,
         String submissionCode,

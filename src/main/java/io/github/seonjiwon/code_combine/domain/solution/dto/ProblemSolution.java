@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ProblemSolution {
+    private Long solutionId;
     private String sourceCode;
     private String language;
     private String username;
