@@ -6,6 +6,7 @@ import io.github.seonjiwon.code_combine.domain.user.code.UserErrorCode;
 import io.github.seonjiwon.code_combine.domain.user.dto.UserRepoInfo;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
+import io.github.seonjiwon.code_combine.domain.user.service.UserService;
 import io.github.seonjiwon.code_combine.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ public class RepoService {
 
     private final RepoRepository repoRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     public void setRepository(Long userId, UserRepoInfo userRepoInfo) {
         User user = userRepository.findById(userId)
@@ -36,5 +38,7 @@ public class RepoService {
                          .name(userRepoInfo.getName())
                          .build();
         repoRepository.save(repo);
+
+        userService.performanceInitialSync(userId);
     }
 }

@@ -1,4 +1,4 @@
-package io.github.seonjiwon.code_combine.domain.solution.service.command;
+package io.github.seonjiwon.code_combine.domain.solution.service.command.v0;
 
 import io.github.seonjiwon.code_combine.domain.problem.domain.Problem;
 import io.github.seonjiwon.code_combine.domain.problem.repository.ProblemRepository;
@@ -7,6 +7,7 @@ import io.github.seonjiwon.code_combine.domain.solution.dto.CommitDetail;
 import io.github.seonjiwon.code_combine.domain.solution.dto.ProblemInfo;
 import io.github.seonjiwon.code_combine.domain.solution.dto.SolutionData;
 import io.github.seonjiwon.code_combine.domain.solution.repository.SolutionRepository;
+import io.github.seonjiwon.code_combine.domain.solution.service.command.SolutionSyncService;
 import io.github.seonjiwon.code_combine.domain.solution.utils.SolutionFetchService;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import java.util.List;
@@ -37,6 +38,7 @@ public class SolutionSyncServiceV0 implements SolutionSyncService {
         }
     }
 
+    @Override
     public void syncCommit(User user, String owner, String repo, String commitSha) {
         // 1. 이미 존재하는 커밋인지 확인
         if (solutionRepository.existsByCommitSha(commitSha)) {
@@ -57,6 +59,10 @@ public class SolutionSyncServiceV0 implements SolutionSyncService {
             } else {
                 sourceCodePath = filePath;
             }
+        }
+
+        if (sourceCodePath == null) {
+            return;
         }
 
         // 3. 소스코드 + readme 가져오기

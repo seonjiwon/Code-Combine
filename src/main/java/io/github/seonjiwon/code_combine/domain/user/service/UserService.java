@@ -1,5 +1,9 @@
 package io.github.seonjiwon.code_combine.domain.user.service;
 
+import io.github.seonjiwon.code_combine.domain.repo.code.RepoErrorCode;
+import io.github.seonjiwon.code_combine.domain.repo.domain.Repo;
+import io.github.seonjiwon.code_combine.domain.repo.repository.RepoRepository;
+import io.github.seonjiwon.code_combine.domain.solution.service.command.InitialSyncService;
 import io.github.seonjiwon.code_combine.domain.user.code.UserErrorCode;
 import io.github.seonjiwon.code_combine.domain.user.dto.LoginSuccessResponse;
 import io.github.seonjiwon.code_combine.domain.user.dto.OAuth2UserInfo;
@@ -18,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RepoRepository repoRepository;
+    private final InitialSyncService initialSyncService;
 
     // OAuth2 로그인 시 사용자 조회 또는 생성
     public User findOrCreateUser(OAuth2UserInfo userInfo) {
@@ -49,5 +55,23 @@ public class UserService {
                                    .username(user.getUsername())
                                    .avatarUrl(user.getAvatarUrl())
                                    .build();
+    }
+
+    public void performanceInitialSync(Long userId) {
+        User user = userRepository.findById(userId)
+                                  .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
+
+        if (user.getLastSyncAt() != null) {
+            log.info("이미 동기화된 사용자입니다.");
+            return;
+        }
+
+        // Repo 조회
+        Repo repo = repoRepository.findByUser(user)
+                                  .orElseThrow(() -> new CustomException(RepoErrorCode.REPO_NOT_FOUND));
+
+        initialSyncService.syncAllCommits(user, user.getUsername(), repo.getName());
+
+        log.info("최초 동기화 완료: userId={}", userId);
     }
 }
