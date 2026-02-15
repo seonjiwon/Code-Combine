@@ -6,6 +6,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class UserRepoInfo {
-
     private final String name;
 }

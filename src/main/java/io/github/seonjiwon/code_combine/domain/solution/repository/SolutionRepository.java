@@ -16,7 +16,7 @@ public interface SolutionRepository extends JpaRepository<Solution, Long> {
     List<Solution> findBySolvedAtGreaterThanEqualAndSolvedAtLessThan(LocalDateTime start,
                                                   LocalDateTime end);
 
-    @Query("SELECT new io.github.seonjiwon.code_combine.domain.solution.dto.ProblemSolution(s.sourceCode, s.language, u.username, u.avatarUrl) " +
+    @Query("SELECT new io.github.seonjiwon.code_combine.domain.solution.dto.ProblemSolution(s.id, s.sourceCode, s.language, u.username, u.avatarUrl) " +
         "FROM Solution s " +
         "JOIN s.user u " +
         "WHERE s.problem.id = :problemId")

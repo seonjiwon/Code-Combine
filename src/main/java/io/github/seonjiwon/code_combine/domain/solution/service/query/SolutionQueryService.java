@@ -1,10 +1,8 @@
 package io.github.seonjiwon.code_combine.domain.solution.service.query;
 
-import io.github.seonjiwon.code_combine.domain.solution.domain.Solution;
 import io.github.seonjiwon.code_combine.domain.solution.dto.ProblemSolution;
 import io.github.seonjiwon.code_combine.domain.solution.dto.SolutionResponse;
 import io.github.seonjiwon.code_combine.domain.solution.dto.SolutionResponse.Submission;
-import io.github.seonjiwon.code_combine.domain.solution.dto.SolutionResponse.Submission.SubmissionBuilder;
 import io.github.seonjiwon.code_combine.domain.solution.repository.SolutionRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +22,16 @@ public class SolutionQueryService {
         List<ProblemSolution> solutions = solutionRepository.findAllSolutionsByProblemId(problemId);
 
         List<Submission> submissions = solutions.stream()
-                                         .map(solution ->
-                                             Submission.builder()
-                                                       .username(solution.getUsername())
-                                                       .language(solution.getLanguage())
-                                                       .submissionCode(
-                                                           solution.getSourceCode())
-                                                       .solveExplain(null)
-                                                       .build())
-                                         .toList();
+                                                .map(solution ->
+                                                    Submission.builder()
+                                                              .solutionId(solution.getSolutionId())
+                                                              .username(solution.getUsername())
+                                                              .language(solution.getLanguage())
+                                                              .submissionCode(
+                                                                  solution.getSourceCode())
+                                                              .solveExplain(null)
+                                                              .build())
+                                                .toList();
         return SolutionResponse.Detail.builder()
                                       .submissions(submissions)
                                       .build();
