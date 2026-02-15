@@ -51,10 +51,7 @@ public class ProblemQueryService {
         log.info("문제 목록 조회 완료 - 조회된 문제 수: {}, hasNext: {}",
             solveInfos.size(), nextCursor != null);
 
-        return ProblemSolveList.builder()
-            .problemList(solveInfos)
-            .cursor(nextCursor)
-            .build();
+        return ProblemSolveList.convertToProblemSolveList(solveInfos, nextCursor);
     }
 
     /**
@@ -88,39 +85,27 @@ public class ProblemQueryService {
         }
 
         List<Long> problemIds = problems.stream()
-            .map(Problem::getId)
-            .toList();
+                                        .map(Problem::getId)
+                                        .toList();
 
         log.debug("문제를 푼 사용자 조회: problemIds 수={}", problemIds.size());
         List<UserSolver> solvers = problemRepository.findSolversByProblemIds(problemIds);
         log.debug("조회된 풀이자 수: {}", solvers.size());
 
         return solvers.stream()
-            .collect(Collectors.groupingBy(UserSolver::getProblemId));
+                      .collect(Collectors.groupingBy(UserSolver::getProblemId));
     }
 
     /**
      * SolveInfo 리스트 생성
      */
     private List<SolveInfo> buildSolveInfoList(List<Problem> problems,
-                                                Map<Long, List<UserSolver>> solverMap) {
+                                               Map<Long, List<UserSolver>> solverMap) {
         return problems.stream()
-            .map(problem -> buildSolveInfo(
-                problem,
-                solverMap.getOrDefault(problem.getId(), List.of())
-            ))
-            .toList();
-    }
-
-    /**
-     * SolveInfo 생성
-     */
-    private SolveInfo buildSolveInfo(Problem problem, List<UserSolver> solvers) {
-        return SolveInfo.builder()
-            .problemId(problem.getId())
-            .problemNumber(problem.getProblemNumber())
-            .problemName(problem.getTitle())
-            .solvedUserCount(solvers.size())
-            .build();
+                       .map(problem -> SolveInfo.convertToSolveInfo(
+                           problem,
+                           solverMap.getOrDefault(problem.getId(), List.of())
+                       ))
+                       .toList();
     }
 }
