@@ -12,6 +12,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +58,41 @@ public class GitClient {
         String response = fetchContentAsJson(url);
 
         return parseCommitSha(response);
+    }
+
+
+    public List<String> fetchAllCommitShas(String owner, String repo) {
+        List<String> allCommitShas = new ArrayList<>();
+        int page = 1;
+        int perPage = 100; // GitHub API 최대값
+
+        while (true) {
+            String url = String.format("%s/repos/%s/%s/commits?page=%d&per_page=%d", baseUrl, owner,
+                repo, page, perPage);
+
+            log.info("Fetching all commits(page {}): {}", page, url);
+
+            String response = fetchContentAsJson(url);
+            List<String> pageShas = parseCommitSha(response);
+
+            if (pageShas.isEmpty()) {
+                break;
+            }
+
+            allCommitShas.addAll(pageShas);
+
+            log.info("Page {} fetched: {} commits (total: {})", page, pageShas.size(),
+                allCommitShas.size());
+
+            if (pageShas.size() < perPage) {
+                break;
+            }
+
+            page++;
+        }
+
+        Collections.reverse(allCommitShas);
+        return allCommitShas;
     }
 
 

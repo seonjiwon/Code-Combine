@@ -5,4 +5,6 @@ import io.github.seonjiwon.code_combine.domain.user.domain.User;
 public interface SolutionSyncService {
 
     void syncTodaySolutions(User userId, String owner, String repo);
+
+    void syncCommit(User user, String owner, String repo, String commitSha);
 }
