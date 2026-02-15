@@ -23,6 +23,6 @@ public class RepoController {
         @AuthenticationPrincipal Long userId,
         @RequestBody UserRepoInfo userRepoInfo) {
 
-        repoService.setRepository(userId, userRepoInfo);
+        repoService.registerRepository(userId, userRepoInfo);
     }
 }

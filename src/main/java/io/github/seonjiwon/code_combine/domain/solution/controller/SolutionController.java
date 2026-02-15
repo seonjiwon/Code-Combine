@@ -5,11 +5,9 @@ import io.github.seonjiwon.code_combine.domain.solution.dto.SolutionResponse;
 import io.github.seonjiwon.code_combine.domain.solution.service.command.SolutionSyncService;
 import io.github.seonjiwon.code_combine.domain.solution.service.query.CommitQueryService;
 import io.github.seonjiwon.code_combine.domain.solution.service.query.SolutionQueryService;
-import io.github.seonjiwon.code_combine.domain.user.code.UserErrorCode;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
-import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
+import io.github.seonjiwon.code_combine.domain.user.service.UserService;
 import io.github.seonjiwon.code_combine.global.CustomResponse;
-import io.github.seonjiwon.code_combine.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,37 +21,41 @@ public class SolutionController {
 
     private final SolutionSyncService solutionSyncService;
     private final SolutionQueryService solutionQueryService;
-    private final UserRepository userRepository;
     private final CommitQueryService commitQueryService;
+    private final UserService userService;
 
+    /**
+     * 오늘의 커밋 동기화
+     */
     @GetMapping("/sync")
-    public CustomResponse<String> codeSync() {
-        User user = userRepository.findById(1L)
-                                  .orElseThrow(
-                                      () -> new CustomException(UserErrorCode.USER_NOT_FOUND));
-
-        // 2. 하드코딩된 값으로 동기화 실행
+    public CustomResponse<String> syncTodayCommits() {
+        User user = userService.findUserById(1L);
         String owner = "seonjiwon";
         String repo = "Java-Algorithm";
 
-        log.info("동기화 시작: owner={}, repo={}", owner, repo);
+        log.info("오늘의 커밋 동기화 시작: userId={}, owner={}, repo={}", user.getId(), owner, repo);
         solutionSyncService.syncTodaySolutions(user, owner, repo);
 
         return CustomResponse.onSuccess("동기화 성공!");
     }
 
+    /**
+     * 주간 커밋 통계 조회
+     */
     @GetMapping("/dashboard")
-    public CustomResponse<DashboardResponse.WeeklyCommitInfo> getWeeklyCommitList() {
+    public CustomResponse<DashboardResponse.WeeklyCommitInfo> getWeeklyCommitInfo() {
         DashboardResponse.WeeklyCommitInfo weeklyCommitInfo = commitQueryService.getWeeklyCommitInfo();
         return CustomResponse.onSuccess(weeklyCommitInfo);
     }
 
+    /**
+     * 특정 문제의 풀이 상세 조회
+     */
     @GetMapping("/{problemId}/solve")
-    public CustomResponse<SolutionResponse.Detail> getDetailSolution(
+    public CustomResponse<SolutionResponse.Detail> getSolutionDetail(
         @PathVariable Long problemId
     ) {
         SolutionResponse.Detail detailSolution = solutionQueryService.getDetailSolution(problemId);
-
         return CustomResponse.onSuccess(detailSolution);
     }
 }
