@@ -2,6 +2,7 @@ package io.github.seonjiwon.code_combine.domain.solution.service.command;
 
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
+import io.github.seonjiwon.code_combine.domain.user.service.TokenService;
 import io.github.seonjiwon.code_combine.global.infra.github.GitHubCommitFetcher;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class InitialSyncService {
     private final GitHubCommitFetcher commitFetcher;
     private final SolutionSyncService solutionSyncService;
     private final UserRepository userRepository;
+    private final TokenService tokenService;
 
     /**
      * 모든 커밋 동기화
@@ -26,13 +28,15 @@ public class InitialSyncService {
         log.info("=== 전체 커밋 동기화 시작 ===");
         log.info("User: {}, Repo: {}/{}", user.getUsername(), owner, repo);
 
+        String token = tokenService.getActiveToken(user.getId());
+
         // 1. 전체 커밋 SHA 목록 조회 (오래된 것부터)
-        List<String> allCommitShas = commitFetcher.fetchAllCommitShas(owner, repo);
+        List<String> allCommitShas = commitFetcher.fetchAllCommitShas(token, owner, repo);
         log.info("총 {} 개의 커밋 동기화 시작", allCommitShas.size());
 
         // 2. 각 커밋 동기화
         allCommitShas.forEach(commitSha ->
-            solutionSyncService.syncCommit(user, owner, repo, commitSha)
+            solutionSyncService.syncCommit(user, token, owner, repo, commitSha)
         );
 
         // 3. 사용자 동기화 상태 업데이트

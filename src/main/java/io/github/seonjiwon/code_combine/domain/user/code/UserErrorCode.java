@@ -13,6 +13,8 @@ public enum UserErrorCode implements BaseErrorCode {
 
     USER_EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "USER409_01", "이미 존재하는 이메일입니다."),
 
+    ACTIVE_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "USER404_02", "활성화된 GitHub 토큰이 없습니다."),
+
     ;
 
     private final HttpStatus status;

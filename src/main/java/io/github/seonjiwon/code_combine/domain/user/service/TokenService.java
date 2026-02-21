@@ -1,9 +1,11 @@
 package io.github.seonjiwon.code_combine.domain.user.service;
 
+import io.github.seonjiwon.code_combine.domain.user.code.UserErrorCode;
 import io.github.seonjiwon.code_combine.domain.user.domain.GitToken;
 import io.github.seonjiwon.code_combine.domain.user.domain.TokenStatus;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.repository.GitTokenRepository;
+import io.github.seonjiwon.code_combine.global.exception.CustomException;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class TokenService {
 
     private final GitTokenRepository gitTokenRepository;
+
+    @Transactional(readOnly = true)
+    public String getActiveToken(Long userId) {
+        GitToken gitToken = gitTokenRepository.findByUserIdAndStatus(userId, TokenStatus.ACTIVATED)
+                                              .orElseThrow(() -> new CustomException(
+                                                  UserErrorCode.ACTIVE_TOKEN_NOT_FOUND));
+        return gitToken.getToken();
+
+    }
 
     // OAuth2 토큰 저장 또는 갱싱
     public void saveOrUpdateToken(User user, String plainToken) {

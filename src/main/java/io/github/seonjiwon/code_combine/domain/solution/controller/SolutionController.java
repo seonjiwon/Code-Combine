@@ -10,6 +10,7 @@ import io.github.seonjiwon.code_combine.domain.user.service.UserService;
 import io.github.seonjiwon.code_combine.global.CustomResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,14 +29,10 @@ public class SolutionController {
      * 오늘의 커밋 동기화
      */
     @GetMapping("/sync")
-    public CustomResponse<String> syncTodayCommits() {
-        User user = userService.findUserById(1L);
-        String owner = "seonjiwon";
-        String repo = "Java-Algorithm";
-
-        log.info("오늘의 커밋 동기화 시작: userId={}, owner={}, repo={}", user.getId(), owner, repo);
-        solutionSyncService.syncTodaySolutions(user, owner, repo);
-
+    public CustomResponse<String> syncTodayCommits(
+        @AuthenticationPrincipal Long userId
+    ) {
+        solutionSyncService.syncTodaySolutions(userId);
         return CustomResponse.onSuccess("동기화 성공!");
     }
 

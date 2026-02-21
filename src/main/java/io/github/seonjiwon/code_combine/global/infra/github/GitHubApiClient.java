@@ -20,9 +20,6 @@ public class GitHubApiClient {
     @Value("${github.base-url}")
     private String baseUrl;
 
-    @Value("${github.token}")
-    private String token;
-
     @Value("${github.raw-accept-header}")
     private String rawAcceptHeader;
 
@@ -32,7 +29,7 @@ public class GitHubApiClient {
     /**
      * 특정 기간의 커밋 목록 조회
      */
-    public String getCommits(String owner, String repo, LocalDateTime since, LocalDateTime until) {
+    public String getCommits(String token, String owner, String repo, LocalDateTime since, LocalDateTime until) {
         ZonedDateTime sinceUtc = since.atZone(ZoneOffset.UTC);
         ZonedDateTime untilUtc = until.atZone(ZoneOffset.UTC);
 
@@ -42,49 +39,49 @@ public class GitHubApiClient {
         );
 
         log.debug("GitHub API 호출: {}", url);
-        return fetchAsJson(url);
+        return fetchAsJson(url, token);
     }
 
     /**
      * 모든 커밋 목록 조회 (페이지네이션)
      */
-    public String getCommits(String owner, String repo, int page, int perPage) {
+    public String getCommits(String token, String owner, String repo, int page, int perPage) {
         String url = String.format(
             "%s/repos/%s/%s/commits?page=%d&per_page=%d",
             baseUrl, owner, repo, page, perPage
         );
 
         log.debug("GitHub API 호출 (page {}): {}", page, url);
-        return fetchAsJson(url);
+        return fetchAsJson(url, token);
     }
 
     /**
      * 커밋 상세 정보 조회
      */
-    public String getCommitDetail(String owner, String repo, String sha) {
+    public String getCommitDetail(String token, String owner, String repo, String sha) {
         String url = String.format(
             "%s/repos/%s/%s/commits/%s",
             baseUrl, owner, repo, sha
         );
 
         log.debug("GitHub API 호출: {}", url);
-        return fetchAsJson(url);
+        return fetchAsJson(url, token);
     }
 
     /**
      * 파일 내용 조회
      */
-    public String getFileContent(String owner, String repo, String path, String ref) {
+    public String getFileContent(String token, String owner, String repo, String path, String ref) {
         String url = String.format(
             "%s/repos/%s/%s/contents/%s?ref=%s",
             baseUrl, owner, repo, path, ref
         );
 
         log.debug("GitHub API 호출: {}", url);
-        return fetchAsRaw(url);
+        return fetchAsRaw(url, token);
     }
 
-    private String fetchAsJson(String url) {
+    private String fetchAsJson(String url, String token) {
         return restClient.get()
             .uri(url)
             .header("Authorization", "Bearer " + token)
@@ -93,7 +90,7 @@ public class GitHubApiClient {
             .body(String.class);
     }
 
-    private String fetchAsRaw(String url) {
+    private String fetchAsRaw(String url, String token) {
         return restClient.get()
             .uri(url)
             .header("Authorization", "Bearer " + token)

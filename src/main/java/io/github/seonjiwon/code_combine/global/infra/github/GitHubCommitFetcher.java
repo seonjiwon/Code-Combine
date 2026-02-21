@@ -23,7 +23,7 @@ public class GitHubCommitFetcher {
     /**
      * 오늘 날짜의 커밋 SHA 목록 조회
      */
-    public List<String> fetchTodayCommitShas(String owner, String repo) {
+    public List<String> fetchTodayCommitShas(String token, String owner, String repo) {
         LocalDateTime todayStart = LocalDate.now().atStartOfDay();
         LocalDateTime todayEnd = LocalDate.now().plusDays(1).atStartOfDay();
 
@@ -33,7 +33,7 @@ public class GitHubCommitFetcher {
 
         log.info("오늘 커밋 조회: {}/{}, 기간: {} ~ {}", owner, repo, since, until);
 
-        String response = apiClient.getCommits(owner, repo, since, until);
+        String response = apiClient.getCommits(token, owner, repo, since, until);
         List<String> commitShas = parser.parseCommitShas(response);
 
         log.info("오늘 커밋 {} 개 발견", commitShas.size());
@@ -43,12 +43,12 @@ public class GitHubCommitFetcher {
     /**
      * 모든 커밋 SHA 목록 조회 (페이지네이션)
      */
-    public List<String> fetchAllCommitShas(String owner, String repo) {
+    public List<String> fetchAllCommitShas(String token, String owner, String repo) {
         List<String> allCommitShas = new ArrayList<>();
         int page = 1;
 
         while (true) {
-            String response = apiClient.getCommits(owner, repo, page, MAX_PER_PAGE);
+            String response = apiClient.getCommits(token, owner, repo, page, MAX_PER_PAGE);
             List<String> pageShas = parser.parseCommitShas(response);
 
             if (pageShas.isEmpty()) {
@@ -76,8 +76,8 @@ public class GitHubCommitFetcher {
     /**
      * 커밋 상세 정보 조회
      */
-    public GitHubCommitDetail fetchCommitDetail(String owner, String repo, String sha) {
-        String response = apiClient.getCommitDetail(owner, repo, sha);
+    public GitHubCommitDetail fetchCommitDetail(String token, String owner, String repo, String sha) {
+        String response = apiClient.getCommitDetail(token, owner, repo, sha);
         GitHubCommitDetail detail = parser.parseCommitDetail(response);
 
         log.debug("커밋 상세 조회: sha={}, 파일 수={}", sha, detail.filePaths().size());
@@ -87,8 +87,8 @@ public class GitHubCommitFetcher {
     /**
      * 파일 내용 조회
      */
-    public String fetchFileContent(String owner, String repo, String path, String ref) {
+    public String fetchFileContent(String token, String owner, String repo, String path, String ref) {
         log.debug("파일 내용 조회: path={}, ref={}", path, ref);
-        return apiClient.getFileContent(owner, repo, path, ref);
+        return apiClient.getFileContent(token, owner, repo, path, ref);
     }
 }
