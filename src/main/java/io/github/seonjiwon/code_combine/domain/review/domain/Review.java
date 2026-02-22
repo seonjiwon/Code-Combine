@@ -1,7 +1,7 @@
 package io.github.seonjiwon.code_combine.domain.review.domain;
 
 import io.github.seonjiwon.code_combine.domain.solution.domain.Solution;
-import io.github.seonjiwon.code_combine.domain.user.entity.User;
+import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

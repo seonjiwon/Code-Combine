@@ -1,0 +1,10 @@
+package io.github.seonjiwon.code_combine.domain.user.repository;
+
+import io.github.seonjiwon.code_combine.domain.user.domain.User;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findByGitId(Integer gitId);
+}
