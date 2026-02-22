@@ -54,16 +54,7 @@ jobs:
             cd /home/ec2-user/app
             docker pull ${{ secrets.DOCKER_USERNAME }}/code-combine:latest
             docker compose down
-            DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} \
-            SPRING_PROFILES_ACTIVE=default \
-            DB_URL=${{ secrets.DB_URL }} \
-            DB_USERNAME=${{ secrets.DB_USERNAME }} \
-            DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            GITHUB_CLIENT_ID=${{ secrets.GH_CLIENT_ID }} \
-            GITHUB_CLIENT_SECRET=${{ secrets.GH_CLIENT_SECRET }} \
-            JWT_SECRET=${{ secrets.JWT_SECRET }} \
-            JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }} \
-            FRONTEND_URL=${{ secrets.FRONTEND_URL }} \
+            export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}" DB_URL="${{ secrets.DB_URL }}" DB_USERNAME="${{ secrets.DB_USERNAME }}" DB_PASSWORD="${{ secrets.DB_PASSWORD }}" GITHUB_CLIENT_ID="${{ secrets.GH_CLIENT_ID }}" GITHUB_CLIENT_SECRET="${{ secrets.GH_CLIENT_SECRET }}" JWT_SECRET="${{ secrets.JWT_SECRET }}" JWT_EXPIRATION="${{ secrets.JWT_EXPIRATION }}" FRONTEND_URL="${{ secrets.FRONTEND_URL }}" SPRING_PROFILES_ACTIVE="default"
             docker compose up -d
             docker image prune -f
 
