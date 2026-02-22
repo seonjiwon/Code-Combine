@@ -1,7 +1,7 @@
-package io.github.seonjiwon.code_combine.domain.solution.parser;
+package io.github.seonjiwon.code_combine.domain.solution.utils;
 
 import io.github.seonjiwon.code_combine.domain.solution.code.SolutionErrorCode;
-import io.github.seonjiwon.code_combine.domain.solution.dto.ProblemInfo;
+import io.github.seonjiwon.code_combine.domain.problem.dto.ProblemInfo;
 import io.github.seonjiwon.code_combine.global.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -1,22 +1,22 @@
 package io.github.seonjiwon.code_combine.domain.problem.dto;
 
 import io.github.seonjiwon.code_combine.domain.problem.domain.Problem;
-import io.github.seonjiwon.code_combine.domain.problem.dto.UserSolver;
 import java.util.List;
 import lombok.Builder;
 
 public class ProblemsResponse {
+
     @Builder
     public record ProblemSolveList(
         List<SolveInfo> problemList,
         String cursor
     ) {
 
-        public static ProblemSolveList convertToProblemSolveList(List<SolveInfo> problemList, String cursor) {
+        public static ProblemSolveList from(List<SolveInfo> problemList, String cursor) {
             return ProblemSolveList.builder()
-                .problemList(problemList)
-                .cursor(cursor)
-                .build();
+                                   .problemList(problemList)
+                                   .cursor(cursor)
+                                   .build();
         }
     }
 
@@ -29,29 +29,31 @@ public class ProblemsResponse {
         List<SolvedUser> solvedUsers
     ) {
 
-        public static SolveInfo convertToSolveInfo(Problem problem, List<UserSolver> solvers) {
+        public static SolveInfo from(Problem problem, List<UserSolverProjection> solvers) {
             return SolveInfo.builder()
-                .problemId(problem.getId())
-                .problemNumber(problem.getProblemNumber())
-                .problemName(problem.getTitle())
-                .solvedUserCount(solvers.size())
-                .build();
+                            .problemId(problem.getId())
+                            .problemNumber(problem.getProblemNumber())
+                            .problemName(problem.getTitle())
+                            .solvedUserCount(solvers.size())
+                            .solvedUsers(solvers.stream()
+                                                .map(SolvedUser::from)
+                                                .toList())
+
+                            .build();
         }
     }
 
     @Builder
     public record SolvedUser(
-        Long userId,
         String username,
         String avatarUrl
     ) {
 
-        public static SolvedUser convertToSolvedUser(UserSolver solver) {
+        public static SolvedUser from(UserSolverProjection solver) {
             return SolvedUser.builder()
-                .userId(solver.getUserId())
-                .username(solver.getUsername())
-                .avatarUrl(solver.getAvatarUrl())
-                .build();
+                             .username(solver.username())
+                             .avatarUrl(solver.avatarUrl())
+                             .build();
         }
     }
 }

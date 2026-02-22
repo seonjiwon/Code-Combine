@@ -1,7 +1,7 @@
 package io.github.seonjiwon.code_combine.domain.solution.repository;
 
 import io.github.seonjiwon.code_combine.domain.solution.domain.Solution;
-import io.github.seonjiwon.code_combine.domain.solution.dto.DailyUserCommitCount;
+import io.github.seonjiwon.code_combine.domain.solution.dto.DailyUserCommitCountProjection;
 import io.github.seonjiwon.code_combine.domain.solution.dto.ProblemSolution;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +29,6 @@ public interface SolutionRepository extends JpaRepository<Solution, Long> {
         "WHERE s.solvedAt >= :start AND s.solvedAt < :end " +
         "GROUP BY s.solvedAt, u.id, u.username, u.avatarUrl " +
         "ORDER BY s.solvedAt")
-    List<DailyUserCommitCount> findDailyUserCommitCounts(@Param("start") LocalDateTime start,
-                                                         @Param("end") LocalDateTime end);
+    List<DailyUserCommitCountProjection> findDailyUserCommitCounts(@Param("start") LocalDateTime start,
+                                                                   @Param("end") LocalDateTime end);
 }

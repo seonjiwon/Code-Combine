@@ -29,8 +29,8 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String username;
 
-    @Column(unique = true, length = 100)
-    private String email;
+    @Column(nullable = false, unique = true)
+    private Integer gitId;
 
     @Column(length = 500)
     private String avatarUrl;

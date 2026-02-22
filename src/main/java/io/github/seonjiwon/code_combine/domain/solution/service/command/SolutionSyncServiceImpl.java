@@ -6,8 +6,8 @@ import io.github.seonjiwon.code_combine.domain.repo.code.RepoErrorCode;
 import io.github.seonjiwon.code_combine.domain.repo.domain.Repo;
 import io.github.seonjiwon.code_combine.domain.repo.repository.RepoRepository;
 import io.github.seonjiwon.code_combine.domain.solution.domain.Solution;
-import io.github.seonjiwon.code_combine.domain.solution.dto.ProblemInfo;
-import io.github.seonjiwon.code_combine.domain.solution.parser.BaekjoonFilePathParser;
+import io.github.seonjiwon.code_combine.domain.problem.dto.ProblemInfo;
+import io.github.seonjiwon.code_combine.domain.solution.utils.BaekjoonFilePathParser;
 import io.github.seonjiwon.code_combine.domain.solution.repository.SolutionRepository;
 import io.github.seonjiwon.code_combine.domain.user.code.UserErrorCode;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
@@ -63,7 +63,7 @@ public class SolutionSyncServiceImpl implements SolutionSyncService {
     public void syncCommit(User user, String token, String owner, String repo, String commitSha) {
         // 1. 중복 체크
         if (solutionRepository.existsByCommitSha(commitSha)) {
-            log.debug("이미 동기화된 커밋: {}", commitSha);
+            log.info("이미 동기화된 커밋: {}", commitSha);
             return;
         }
 
@@ -73,7 +73,7 @@ public class SolutionSyncServiceImpl implements SolutionSyncService {
         // 3. 소스 코드 파일 찾기
         String sourceCodePath = findSourceCodePath(commitDetail.filePaths());
         if (sourceCodePath == null) {
-            log.debug("소스 코드 파일 없음: commitSha={}", commitSha);
+            log.info("소스 코드 파일 없음: commitSha={}", commitSha);
             return;
         }
 

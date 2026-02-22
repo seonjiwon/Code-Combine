@@ -1,7 +1,7 @@
 package io.github.seonjiwon.code_combine.domain.problem.repository;
 
 import io.github.seonjiwon.code_combine.domain.problem.domain.Problem;
-import io.github.seonjiwon.code_combine.domain.problem.dto.UserSolver;
+import io.github.seonjiwon.code_combine.domain.problem.dto.UserSolverProjection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -26,12 +26,12 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
     List<Problem> findProblems(@Param("cursor") Long cursor, Pageable pageable);
 
 
-    @Query("SELECT new io.github.seonjiwon.code_combine.domain.problem.dto.UserSolver(" +
+    @Query("SELECT new io.github.seonjiwon.code_combine.domain.problem.dto.UserSolverProjection(" +
         "p.id, u.id, u.username, u.avatarUrl) " +
         "FROM Problem p " +
         "JOIN Solution s ON s.problem.id = p.id " +
         "JOIN s.user u " +
         "WHERE p.id IN :problemIds " +
         "ORDER BY p.problemNumber")
-    List<UserSolver> findSolversByProblemIds(@Param("problemIds") List<Long> problemIds);
+    List<UserSolverProjection> findSolversByProblemIds(@Param("problemIds") List<Long> problemIds);
 }

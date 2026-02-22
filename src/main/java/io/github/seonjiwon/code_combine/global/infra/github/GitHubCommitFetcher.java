@@ -41,7 +41,7 @@ public class GitHubCommitFetcher {
     }
 
     /**
-     * 모든 커밋 SHA 목록 조회 (페이지네이션)
+     * 모든 커밋 SHA 목록 조회
      */
     public List<String> fetchAllCommitShas(String token, String owner, String repo) {
         List<String> allCommitShas = new ArrayList<>();
@@ -56,7 +56,6 @@ public class GitHubCommitFetcher {
             }
 
             allCommitShas.addAll(pageShas);
-            log.info("Page {} 조회 완료: {} 개 커밋 (누적: {})", page, pageShas.size(), allCommitShas.size());
 
             // 마지막 페이지 체크
             if (pageShas.size() < MAX_PER_PAGE) {
@@ -66,7 +65,7 @@ public class GitHubCommitFetcher {
             page++;
         }
 
-        // 오래된 커밋부터 처리하도록 역순 정렬
+        // 오래된 커밋부터 처리
         Collections.reverse(allCommitShas);
 
         log.info("전체 커밋 조회 완료: 총 {} 개", allCommitShas.size());
@@ -80,7 +79,6 @@ public class GitHubCommitFetcher {
         String response = apiClient.getCommitDetail(token, owner, repo, sha);
         GitHubCommitDetail detail = parser.parseCommitDetail(response);
 
-        log.debug("커밋 상세 조회: sha={}, 파일 수={}", sha, detail.filePaths().size());
         return detail;
     }
 

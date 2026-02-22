@@ -2,7 +2,6 @@ package io.github.seonjiwon.code_combine.domain.review.controller;
 
 import io.github.seonjiwon.code_combine.domain.review.dto.ReviewRequest;
 import io.github.seonjiwon.code_combine.domain.review.dto.ReviewResponse;
-import io.github.seonjiwon.code_combine.domain.review.dto.SolutionReview;
 import io.github.seonjiwon.code_combine.domain.review.service.ReviewCommandService;
 import io.github.seonjiwon.code_combine.domain.review.service.ReviewQueryService;
 import io.github.seonjiwon.code_combine.global.CustomResponse;
@@ -26,7 +25,7 @@ public class ReviewController {
     private final ReviewQueryService reviewQueryService;
 
     @PostMapping("/reviews")
-    public CustomResponse<?> createReview(
+    public CustomResponse<String> createReview(
         @AuthenticationPrincipal Long userId,
         @RequestBody ReviewRequest request
     ) {

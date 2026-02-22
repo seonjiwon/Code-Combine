@@ -1,4 +1,4 @@
-package io.github.seonjiwon.code_combine.domain.solution.dto;
+package io.github.seonjiwon.code_combine.domain.problem.dto;
 
 import lombok.Builder;
 import lombok.Getter;

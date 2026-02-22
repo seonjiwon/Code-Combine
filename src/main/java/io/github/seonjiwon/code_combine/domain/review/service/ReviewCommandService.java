@@ -21,9 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ReviewCommandService {
 
-    private final ReviewRepository reviewRepository;
     private final SolutionRepository solutionRepository;
     private final UserRepository userRepository;
+    private final ReviewRepository reviewRepository;
 
     public void createReview(Long userId, ReviewRequest request) {
         log.info("Reviewer: {} 등록 시작", userId);

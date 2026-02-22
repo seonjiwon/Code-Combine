@@ -3,9 +3,12 @@ package io.github.seonjiwon.code_combine.domain.repo.service;
 import io.github.seonjiwon.code_combine.domain.repo.domain.Repo;
 import io.github.seonjiwon.code_combine.domain.repo.repository.RepoRepository;
 import io.github.seonjiwon.code_combine.domain.solution.service.command.InitialSyncService;
+import io.github.seonjiwon.code_combine.domain.user.code.UserErrorCode;
 import io.github.seonjiwon.code_combine.domain.user.dto.UserRepoInfo;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
+import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
 import io.github.seonjiwon.code_combine.domain.user.service.UserService;
+import io.github.seonjiwon.code_combine.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,18 +21,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class RepoService {
 
     private final RepoRepository repoRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final InitialSyncService initialSyncService;
 
     /**
      * 사용자 Repository 등록 및 초기 동기화
      */
     public void registerRepository(Long userId, UserRepoInfo userRepoInfo) {
-        User user = userService.findUserById(userId);
+        User user = userRepository.findById(userId)
+                                              .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
 
         // 중복 등록 체크
         if (repoRepository.existsByUserId(userId)) {
-            log.warn("사용자 {}는 이미 Repository에 등록되어 있습니다", userId);
+            log.info("사용자 {}는 이미 Repo 등록이 되어 있습니다.", userId);
             return;
         }
 
@@ -57,7 +61,7 @@ public class RepoService {
      */
     private void triggerInitialSync(User user, Repo repo) {
         if (user.getLastSyncAt() != null) {
-            log.info("사용자 {}는 이미 동기화를 완료했습니다", user.getId());
+            log.info("사용자 {}는 이미 초기 동기화를 완료 했습니다.", user.getId());
             return;
         }
 

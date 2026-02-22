@@ -54,10 +54,6 @@ public class Solution extends BaseEntity {
 
     @Column(nullable = false)
     private LocalDateTime solvedAt;
-//
-//    private int memoryUsage;
-//
-//    private int executionTime;
 
 
 

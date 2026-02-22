@@ -38,7 +38,7 @@ public class GitHubApiClient {
             baseUrl, owner, repo, sinceUtc, untilUtc
         );
 
-        log.debug("GitHub API 호출: {}", url);
+        log.info("GitHub API 호출: {}", url);
         return fetchAsJson(url, token);
     }
 
@@ -51,7 +51,7 @@ public class GitHubApiClient {
             baseUrl, owner, repo, page, perPage
         );
 
-        log.debug("GitHub API 호출 (page {}): {}", page, url);
+        log.info("GitHub API 호출 (page {}): {}", page, url);
         return fetchAsJson(url, token);
     }
 
@@ -59,12 +59,13 @@ public class GitHubApiClient {
      * 커밋 상세 정보 조회
      */
     public String getCommitDetail(String token, String owner, String repo, String sha) {
+        log.info("커밋 세부 정보 가져오기");
+
         String url = String.format(
             "%s/repos/%s/%s/commits/%s",
             baseUrl, owner, repo, sha
         );
 
-        log.debug("GitHub API 호출: {}", url);
         return fetchAsJson(url, token);
     }
 
@@ -77,7 +78,7 @@ public class GitHubApiClient {
             baseUrl, owner, repo, path, ref
         );
 
-        log.debug("GitHub API 호출: {}", url);
+        log.info("GitHub API 호출: {}", url);
         return fetchAsRaw(url, token);
     }
 

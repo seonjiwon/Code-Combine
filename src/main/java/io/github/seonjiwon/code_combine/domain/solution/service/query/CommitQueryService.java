@@ -3,7 +3,7 @@ package io.github.seonjiwon.code_combine.domain.solution.service.query;
 
 import static io.github.seonjiwon.code_combine.domain.solution.dto.DashboardResponse.*;
 
-import io.github.seonjiwon.code_combine.domain.solution.dto.DailyUserCommitCount;
+import io.github.seonjiwon.code_combine.domain.solution.dto.DailyUserCommitCountProjection;
 import io.github.seonjiwon.code_combine.domain.solution.dto.DashboardResponse.UserCommit;
 import io.github.seonjiwon.code_combine.domain.solution.dto.DashboardResponse.WeeklyCommitInfo;
 import io.github.seonjiwon.code_combine.domain.solution.repository.SolutionRepository;
@@ -41,13 +41,13 @@ public class CommitQueryService {
         LocalDateTime end = endDate.atStartOfDay(KST).toLocalDateTime();
 
         // 2. 날짜별/유저별 커밋 수 조회 - left join
-        List<DailyUserCommitCount> commitCounts = solutionRepository.findDailyUserCommitCounts(
+        List<DailyUserCommitCountProjection> commitCounts = solutionRepository.findDailyUserCommitCounts(
             start, end);
 
         // 3. 날짜별로 그룹핑
-        Map<LocalDate, List<DailyUserCommitCount>> grouped = commitCounts.stream()
-                                                                         .collect(Collectors.groupingBy(
-                                                                                 commitCount -> commitCount.getSolvedAt()
+        Map<LocalDate, List<DailyUserCommitCountProjection>> grouped = commitCounts.stream()
+                                                                                   .collect(Collectors.groupingBy(
+                                                                                 commitCount -> commitCount.solvedAt()
                                                                                                            .toLocalDate()));
 
         // 4. 응답 DTO 변환
@@ -67,21 +67,21 @@ public class CommitQueryService {
 
     // 집계 데이터를 응답 DTO로 변환
     private WeeklyCommitInfo convertWeeklyStats(LocalDate startDate,
-                                                Map<LocalDate, List<DailyUserCommitCount>> grouped) {
+                                                Map<LocalDate, List<DailyUserCommitCountProjection>> grouped) {
         List<WeeklyState> weeklyStats = new ArrayList<>();
 
         // 일 ~ 토 순회
         for (int i = 0; i < 7; i++) {
             LocalDate date = startDate.plusDays(i);
-            List<DailyUserCommitCount> dailyCounts = grouped.getOrDefault(date, List.of());
+            List<DailyUserCommitCountProjection> dailyCounts = grouped.getOrDefault(date, List.of());
 
             List<UserCommit> userCommits = dailyCounts.stream()
-                                                      .map(UserCommit::convertToUserCommit)
+                                                      .map(UserCommit::from)
                                                       .toList();
 
-            weeklyStats.add(WeeklyState.convertToWeeklyState(date, userCommits));
+            weeklyStats.add(WeeklyState.from(date, userCommits));
         }
 
-        return WeeklyCommitInfo.convertToWeeklyCommitInfo(weeklyStats);
+        return WeeklyCommitInfo.from(weeklyStats);
     }
 }

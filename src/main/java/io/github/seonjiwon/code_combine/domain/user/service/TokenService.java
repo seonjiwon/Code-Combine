@@ -23,10 +23,8 @@ public class TokenService {
     @Transactional(readOnly = true)
     public String getActiveToken(Long userId) {
         GitToken gitToken = gitTokenRepository.findByUserIdAndStatus(userId, TokenStatus.ACTIVATED)
-                                              .orElseThrow(() -> new CustomException(
-                                                  UserErrorCode.ACTIVE_TOKEN_NOT_FOUND));
+                                              .orElseThrow(() -> new CustomException(UserErrorCode.ACTIVE_TOKEN_NOT_FOUND));
         return gitToken.getToken();
-
     }
 
     // OAuth2 토큰 저장 또는 갱싱
@@ -44,7 +42,7 @@ public class TokenService {
                                  .status(TokenStatus.ACTIVATED)
                                  .build();
         gitTokenRepository.save(newToken);
-        log.info("사용자 {} 토큰 저장 완료", user.getEmail());
+        log.info("사용자 {} 토큰 저장 완료", user.getGitId());
     }
 
     private LocalDateTime calculateExpiration() {

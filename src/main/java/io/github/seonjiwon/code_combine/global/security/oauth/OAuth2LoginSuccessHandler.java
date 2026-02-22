@@ -60,7 +60,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         // 2. User 조회 또는 생성
         User user = userService.findOrCreateUser(userInfo);
-        log.info("OAuth2 로그인 성공: {}", user.getEmail());
+        log.info("OAuth2 로그인 성공: gitId={}", user.getGitId());
 
         // 3. GitHub AccessToken 저장
         tokenService.saveOrUpdateToken(user, accessToken);

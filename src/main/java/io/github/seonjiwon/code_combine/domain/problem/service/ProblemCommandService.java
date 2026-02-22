@@ -2,7 +2,7 @@ package io.github.seonjiwon.code_combine.domain.problem.service;
 
 import io.github.seonjiwon.code_combine.domain.problem.domain.Problem;
 import io.github.seonjiwon.code_combine.domain.problem.repository.ProblemRepository;
-import io.github.seonjiwon.code_combine.domain.solution.dto.ProblemInfo;
+import io.github.seonjiwon.code_combine.domain.problem.dto.ProblemInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

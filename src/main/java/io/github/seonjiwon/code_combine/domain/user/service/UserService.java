@@ -21,9 +21,10 @@ public class UserService {
 
     /**
      * OAuth2 로그인 시 사용자 조회 또는 생성
+     * gitId 조회시 존재하지 않으면 새로 생성
      */
     public User findOrCreateUser(OAuth2UserInfo userInfo) {
-        return userRepository.findByEmail(userInfo.getEmail())
+        return userRepository.findByGitId(userInfo.getId())
             .orElseGet(() -> createUser(userInfo));
     }
 
@@ -33,12 +34,12 @@ public class UserService {
     private User createUser(OAuth2UserInfo userInfo) {
         User newUser = User.builder()
             .username(userInfo.getUsername())
-            .email(userInfo.getEmail())
+            .gitId(userInfo.getId())
             .avatarUrl(userInfo.getAvatarUrl())
             .build();
 
         User savedUser = userRepository.save(newUser);
-        log.info("새로운 사용자 생성: email={}, username={}", savedUser.getEmail(), savedUser.getUsername());
+        log.info("새로운 사용자 생성: gitId={}, username={}", savedUser.getGitId(), savedUser.getUsername());
 
         return savedUser;
     }
@@ -47,20 +48,13 @@ public class UserService {
      * 로그인 성공 후 사용자 정보 조회
      */
     public LoginSuccessResponse getLoginSuccessUserInfo(Long userId) {
-        User user = findUserById(userId);
+        User user = userRepository.findById(userId)
+                                  .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
 
         return LoginSuccessResponse.builder()
             .userId(user.getId())
             .username(user.getUsername())
             .avatarUrl(user.getAvatarUrl())
             .build();
-    }
-
-    /**
-     * ID로 사용자 조회
-     */
-    public User findUserById(Long userId) {
-        return userRepository.findById(userId)
-            .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
     }
 }

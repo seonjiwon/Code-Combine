@@ -26,13 +26,12 @@ public class InitialSyncService {
      */
     public void syncAllCommits(User user, String owner, String repo) {
         log.info("=== 전체 커밋 동기화 시작 ===");
-        log.info("User: {}, Repo: {}/{}", user.getUsername(), owner, repo);
 
         String token = tokenService.getActiveToken(user.getId());
 
         // 1. 전체 커밋 SHA 목록 조회 (오래된 것부터)
         List<String> allCommitShas = commitFetcher.fetchAllCommitShas(token, owner, repo);
-        log.info("총 {} 개의 커밋 동기화 시작", allCommitShas.size());
+        log.info("커밋 동기화 시작");
 
         // 2. 각 커밋 동기화
         allCommitShas.forEach(commitSha ->
