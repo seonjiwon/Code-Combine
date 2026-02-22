@@ -22,7 +22,7 @@ public interface SolutionRepository extends JpaRepository<Solution, Long> {
         "WHERE s.problem.id = :problemId")
     List<ProblemSolution> findAllSolutionsByProblemId(@Param("problemId") Long problemId);
 
-    @Query("SELECT new io.github.seonjiwon.code_combine.domain.solution.dto.DailyUserCommitCount(" +
+    @Query("SELECT new io.github.seonjiwon.code_combine.domain.solution.dto.DailyUserCommitCountProjection(" +
         "s.solvedAt, u.id, u.username, u.avatarUrl, COUNT(s)) " +
         "FROM Solution s " +
         "LEFT JOIN s.user u " +
