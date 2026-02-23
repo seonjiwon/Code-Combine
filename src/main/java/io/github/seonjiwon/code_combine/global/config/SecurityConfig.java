@@ -37,6 +37,8 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
+                    "/oauth2/authorization/**",  // OAuth2 로그인 시작 경로
+                    "/login/oauth2/code/**",     // GitHub 콜백 경로
                     "/oauth/**",
                     // Swagger
                     "/swagger-ui/**",
