@@ -25,9 +25,9 @@ public class ReviewCommandService {
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
 
-    public void createReview(Long userId, ReviewRequest request) {
+    public void createReview(Long userId, Long solutionId, ReviewRequest request) {
         log.info("Reviewer: {} 등록 시작", userId);
-        Solution solution = solutionRepository.findById(request.solutionId())
+        Solution solution = solutionRepository.findById(solutionId)
             .orElseThrow(() -> new CustomException(SolutionErrorCode.SOLUTION_NOT_FOUND));
 
         User reviewer = userRepository.findById(userId)
