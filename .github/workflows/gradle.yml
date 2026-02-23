@@ -43,6 +43,16 @@ jobs:
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/code-combine:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/code-combine:buildcache,mode=max
 
+      - name: Copy docker-compose to EC2
+        if: github.event_name == 'push'
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "docker-compose.yml"
+          target: "/home/ec2-user/app"
+
       - name: Deploy to EC2
         if: github.event_name == 'push'
         uses: appleboy/ssh-action@v1.0.3
@@ -54,7 +64,7 @@ jobs:
             cd /home/ec2-user/app
             docker pull ${{ secrets.DOCKER_USERNAME }}/code-combine:latest
             docker compose down
-            export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}" DB_URL="${{ secrets.DB_URL }}" DB_USERNAME="${{ secrets.DB_USERNAME }}" DB_PASSWORD="${{ secrets.DB_PASSWORD }}" GITHUB_CLIENT_ID="${{ secrets.GH_CLIENT_ID }}" GITHUB_CLIENT_SECRET="${{ secrets.GH_CLIENT_SECRET }}" JWT_SECRET="${{ secrets.JWT_SECRET }}" JWT_EXPIRATION="${{ secrets.JWT_EXPIRATION }}" FRONTEND_URL="${{ secrets.FRONTEND_URL }}" SPRING_PROFILES_ACTIVE="default"
+            export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}" DB_URL="${{ secrets.DB_URL }}" DB_USERNAME="${{ secrets.DB_USERNAME }}" DB_PASSWORD="${{ secrets.DB_PASSWORD }}" GH_CLIENT_ID="${{ secrets.GH_CLIENT_ID }}" GH_CLIENT_SECRET="${{ secrets.GH_CLIENT_SECRET }}" JWT_SECRET="${{ secrets.JWT_SECRET }}" JWT_EXPIRATION="${{ secrets.JWT_EXPIRATION }}" FRONTEND_URL="${{ secrets.FRONTEND_URL }}" SPRING_PROFILES_ACTIVE="default"
             docker compose up -d
             docker image prune -f
 
