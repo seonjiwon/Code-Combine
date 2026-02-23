@@ -1,5 +1,7 @@
 package io.github.seonjiwon.code_combine.global.infra.github;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,13 +31,13 @@ public class GitHubApiClient {
     /**
      * 특정 기간의 커밋 목록 조회
      */
-    public String getCommits(String token, String owner, String repo, LocalDateTime since, LocalDateTime until) {
-        ZonedDateTime sinceUtc = since.atZone(ZoneOffset.UTC);
-        ZonedDateTime untilUtc = until.atZone(ZoneOffset.UTC);
+    public String getCommits(String token, String owner, String repo, ZonedDateTime since, ZonedDateTime until) {
+        String sinceStr = since.format(DateTimeFormatter.ISO_INSTANT);
+        String untilStr = until.format(DateTimeFormatter.ISO_INSTANT);
 
         String url = String.format(
             "%s/repos/%s/%s/commits?since=%s&until=%s",
-            baseUrl, owner, repo, sinceUtc, untilUtc
+            baseUrl, owner, repo, sinceStr, untilStr
         );
 
         log.info("GitHub API 호출: {}", url);

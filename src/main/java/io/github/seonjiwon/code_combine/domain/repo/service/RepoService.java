@@ -4,10 +4,9 @@ import io.github.seonjiwon.code_combine.domain.repo.domain.Repo;
 import io.github.seonjiwon.code_combine.domain.repo.repository.RepoRepository;
 import io.github.seonjiwon.code_combine.domain.solution.service.command.InitialSyncService;
 import io.github.seonjiwon.code_combine.domain.user.code.UserErrorCode;
-import io.github.seonjiwon.code_combine.domain.user.dto.UserRepoInfo;
+import io.github.seonjiwon.code_combine.domain.repo.dto.RepoRegisterRequest;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
-import io.github.seonjiwon.code_combine.domain.user.service.UserService;
 import io.github.seonjiwon.code_combine.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +26,7 @@ public class RepoService {
     /**
      * 사용자 Repository 등록 및 초기 동기화
      */
-    public void registerRepository(Long userId, UserRepoInfo userRepoInfo) {
+    public void registerRepository(Long userId, RepoRegisterRequest repoRegisterRequest) {
         User user = userRepository.findById(userId)
                                               .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
 
@@ -38,7 +37,7 @@ public class RepoService {
         }
 
         // Repository 저장
-        Repo repo = createRepo(user, userRepoInfo);
+        Repo repo = createRepo(user, repoRegisterRequest);
         repoRepository.save(repo);
         log.info("Repository 등록 완료: userId={}, repoName={}", userId, repo.getName());
 
@@ -49,10 +48,10 @@ public class RepoService {
     /**
      * Repository 엔티티 생성
      */
-    private Repo createRepo(User user, UserRepoInfo userRepoInfo) {
+    private Repo createRepo(User user, RepoRegisterRequest repoRegisterRequest) {
         return Repo.builder()
             .user(user)
-            .name(userRepoInfo.getName())
+            .name(repoRegisterRequest.getName())
             .build();
     }
 

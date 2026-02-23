@@ -3,6 +3,9 @@ package io.github.seonjiwon.code_combine.global.infra.github;
 import io.github.seonjiwon.code_combine.global.infra.github.dto.GitHubCommitDetail;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,18 +21,18 @@ public class GitHubCommitFetcher {
     private final GitHubApiClient apiClient;
     private final GitHubResponseParser parser;
 
+    private static final ZoneId KST = ZoneId.of("Asia/Seoul");
     private static final int MAX_PER_PAGE = 100;
+
 
     /**
      * 오늘 날짜의 커밋 SHA 목록 조회
      */
     public List<String> fetchTodayCommitShas(String token, String owner, String repo) {
-        LocalDateTime todayStart = LocalDate.now().atStartOfDay();
-        LocalDateTime todayEnd = LocalDate.now().plusDays(1).atStartOfDay();
+        LocalDate today = LocalDate.now(KST);
 
-        // UTC 기준으로 9시간 차감 (KST -> UTC)
-        LocalDateTime since = todayStart.minusHours(9);
-        LocalDateTime until = todayEnd.minusHours(9);
+        ZonedDateTime since = today.atStartOfDay(KST).withZoneSameInstant(ZoneOffset.UTC);
+        ZonedDateTime until = today.plusDays(1).atStartOfDay(KST).withZoneSameInstant(ZoneOffset.UTC);
 
         log.info("오늘 커밋 조회: {}/{}, 기간: {} ~ {}", owner, repo, since, until);
 

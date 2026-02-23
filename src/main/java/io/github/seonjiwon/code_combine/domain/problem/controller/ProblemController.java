@@ -3,6 +3,9 @@ package io.github.seonjiwon.code_combine.domain.problem.controller;
 import io.github.seonjiwon.code_combine.domain.problem.dto.ProblemsResponse.ProblemSolveList;
 import io.github.seonjiwon.code_combine.domain.problem.service.ProblemQueryService;
 import io.github.seonjiwon.code_combine.global.CustomResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,13 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "문제 정보 API", description = "유저가 해결한 문제 목록을 가져옵니다.")
 public class ProblemController {
 
     private final ProblemQueryService problemQueryService;
 
     @GetMapping("/problems")
+    @Operation(
+        summary = "문제 리스트 받아오기",
+        description = "커서 기반으로 문제 리스트를 받아옵니다. 첫 페이지 요청 시 cursor 없이 호출."
+    )
     public CustomResponse<ProblemSolveList> getProblemList(
-        @RequestParam(value = "cursor") String cursor
+        @Parameter(description = "이전 응답의 cursor 값. 첫 페이지는 생략 가능", example = "10")
+        @RequestParam(value = "cursor", required = false) String cursor
     ) {
         ProblemSolveList problemSolveList = problemQueryService.getProblemList(cursor);
         return CustomResponse.onSuccess(problemSolveList);
