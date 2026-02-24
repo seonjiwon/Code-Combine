@@ -57,7 +57,7 @@ public class ProblemQueryService {
      */
     public ProblemSolveList searchProblems(String keyword) {
         List<Problem> problems = keyword.matches("\\d+")
-            ? problemRepository.findByProblemNumberStartingWith(Integer.parseInt(keyword))
+            ? problemRepository.findByProblemNumberStartingWith(keyword)
             : problemRepository.findByTitleStartingWith(keyword);
 
         Map<Long, List<UserSolverProjection>> solverMap = groupSolversByProblem(problems);
