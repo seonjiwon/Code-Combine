@@ -32,4 +32,17 @@ public class ProblemController {
         ProblemSolveList problemSolveList = problemQueryService.getProblemList(cursor);
         return CustomResponse.onSuccess(problemSolveList);
     }
+
+    @GetMapping("/problems/search")
+    @Operation(
+        summary = "문제 검색",
+        description = "숫자 입력 시 문제 번호 완전 일치, 문자 입력 시 제목 전방 일치로 검색합니다."
+    )
+    public CustomResponse<ProblemSolveList> searchProblems(
+        @Parameter(description = "검색 키워드 (문제 번호 또는 제목)", example = "두 수")
+        @RequestParam String keyword
+    ) {
+        ProblemSolveList result = problemQueryService.searchProblems(keyword);
+        return CustomResponse.onSuccess(result);
+    }
 }

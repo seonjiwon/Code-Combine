@@ -53,6 +53,20 @@ public class ProblemQueryService {
     }
 
     /**
+     * 문제 검색
+     */
+    public ProblemSolveList searchProblems(String keyword) {
+        List<Problem> problems = keyword.matches("\\d+")
+            ? problemRepository.findByProblemNumberStartingWith(Integer.parseInt(keyword))
+            : problemRepository.findByTitleStartingWith(keyword);
+
+        Map<Long, List<UserSolverProjection>> solverMap = groupSolversByProblem(problems);
+        List<SolveInfo> solveInfos = buildSolveInfoList(problems, solverMap);
+        return ProblemSolveList.from(solveInfos, null);
+    }
+
+
+    /**
      * 커서 기반으로 문제 조회
      */
     private List<Problem> fetchProblems(String cursor, int limit) {

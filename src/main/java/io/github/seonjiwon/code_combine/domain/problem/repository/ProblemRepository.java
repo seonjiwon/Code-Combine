@@ -34,4 +34,18 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
         "WHERE p.id IN :problemIds " +
         "ORDER BY p.problemNumber")
     List<UserSolverProjection> findSolversByProblemIds(@Param("problemIds") List<Long> problemIds);
+
+    @Query("SELECT p "
+        + "FROM Problem p "
+        + "WHERE p.problemNumber = :problemNumber "
+        + "ORDER BY p.problemNumber")
+    List<Problem> findByProblemNumberStartingWith(@Param("problemNumber") int problemNumber);
+
+    @Query("SELECT p "
+        + "FROM Problem p "
+        + "WHERE p.title LIKE :keyword% "
+        + "ORDER BY p.problemNumber")
+    List<Problem> findByTitleStartingWith(@Param("keyword") String keyword);
+
+
 }
