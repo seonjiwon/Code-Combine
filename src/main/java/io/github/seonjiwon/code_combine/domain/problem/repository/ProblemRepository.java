@@ -37,9 +37,9 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
 
     @Query("SELECT p "
         + "FROM Problem p "
-        + "WHERE p.problemNumber = :problemNumber "
+        + "WHERE CAST(p.problemNumber AS string) LIKE :keyword% "
         + "ORDER BY p.problemNumber")
-    List<Problem> findByProblemNumberStartingWith(@Param("problemNumber") int problemNumber);
+    List<Problem> findByProblemNumberStartingWith(@Param("keyword") String keyword);
 
     @Query("SELECT p "
         + "FROM Problem p "
