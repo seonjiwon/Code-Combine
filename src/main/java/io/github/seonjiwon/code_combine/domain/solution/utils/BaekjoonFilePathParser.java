@@ -91,7 +91,7 @@ public class BaekjoonFilePathParser {
             throw new CustomException(SolutionErrorCode.INVALID_FILE_PATH);
         }
 
-        return problemDir.substring(dotIndex + 1).trim();
+        return problemDir.substring(dotIndex + 1).strip();
     }
 
     /**
