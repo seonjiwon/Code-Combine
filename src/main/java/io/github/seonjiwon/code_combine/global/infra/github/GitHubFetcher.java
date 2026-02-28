@@ -1,8 +1,8 @@
 package io.github.seonjiwon.code_combine.global.infra.github;
 
+import io.github.seonjiwon.code_combine.domain.repo.dto.GitHubRepoResponse;
 import io.github.seonjiwon.code_combine.global.infra.github.dto.GitHubCommitDetail;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class GitHubCommitFetcher {
+public class GitHubFetcher {
 
     private final GitHubApiClient apiClient;
     private final GitHubResponseParser parser;
@@ -24,6 +24,14 @@ public class GitHubCommitFetcher {
     private static final ZoneId KST = ZoneId.of("Asia/Seoul");
     private static final int MAX_PER_PAGE = 100;
 
+    /**
+     * Repository 목록 불러오기
+     */
+    public List<String> fetchUserRepos(String token) {
+        log.info("사용자 Repository 조회");
+        String response = apiClient.getUserRepos(token);
+        return parser.parseRepos(response);
+    }
 
     /**
      * 오늘 날짜의 커밋 SHA 목록 조회

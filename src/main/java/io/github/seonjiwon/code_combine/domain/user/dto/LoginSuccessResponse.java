@@ -11,4 +11,5 @@ public class LoginSuccessResponse {
     private String username;
     private String avatarUrl;
 
+    private boolean hasRepo;
 }

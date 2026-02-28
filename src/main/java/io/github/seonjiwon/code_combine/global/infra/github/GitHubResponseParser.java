@@ -22,6 +22,26 @@ public class GitHubResponseParser {
 
     private final ObjectMapper objectMapper;
 
+    /**
+     * GitHub 레포지토리 목록에서 name만 추출
+     */
+    public List<String> parseRepos(String jsonResponse) {
+        try {
+            JsonNode root = objectMapper.readTree(jsonResponse);
+            List<String> repoNames = new ArrayList<>();
+
+            for (JsonNode repoNode : root) {
+                repoNames.add(repoNode.get("name").asText());
+            }
+
+            log.info("레포지토리 {} 개 파싱 완료", repoNames.size());
+            return repoNames;
+        } catch (JsonProcessingException e) {
+            log.error("레포지토리 목록 파싱 실패", e);
+            throw new CustomException(GitErrorCode.GITHUB_JSON_PARSE_ERROR);
+        }
+    }
+
     public List<String> parseCommitShas(String jsonResponse) {
         try {
             JsonNode root = objectMapper.readTree(jsonResponse);

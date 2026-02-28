@@ -14,7 +14,7 @@ import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
 import io.github.seonjiwon.code_combine.domain.user.service.TokenService;
 import io.github.seonjiwon.code_combine.global.exception.CustomException;
-import io.github.seonjiwon.code_combine.global.infra.github.GitHubCommitFetcher;
+import io.github.seonjiwon.code_combine.global.infra.github.GitHubFetcher;
 import io.github.seonjiwon.code_combine.global.infra.github.dto.GitHubCommitDetail;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SolutionSyncServiceImpl implements SolutionSyncService {
 
-    private final GitHubCommitFetcher commitFetcher;
+    private final GitHubFetcher fetcher;
     private final BaekjoonFilePathParser filePathParser;
     private final ProblemCommandService problemCommandService;
     private final TokenService tokenService;
@@ -50,7 +50,7 @@ public class SolutionSyncServiceImpl implements SolutionSyncService {
 
         log.info("=== 커밋 동기화 시작: owner={} ===", user.getUsername());
 
-        List<String> commitShas = commitFetcher.fetchTodayCommitShas(token, owner, repoName);
+        List<String> commitShas = fetcher.fetchTodayCommitShas(token, owner, repoName);
         log.info("오늘의 커밋 {} 개 발견", commitShas.size());
 
         commitShas.forEach(sha -> syncCommit(user, token, owner, repoName, sha));
@@ -68,7 +68,7 @@ public class SolutionSyncServiceImpl implements SolutionSyncService {
         }
 
         // 2. 커밋 상세 정보 조회
-        GitHubCommitDetail commitDetail = commitFetcher.fetchCommitDetail(token, owner, repo, commitSha);
+        GitHubCommitDetail commitDetail = fetcher.fetchCommitDetail(token, owner, repo, commitSha);
 
         // 3. 소스 코드 파일 찾기
         String sourceCodePath = findSourceCodePath(commitDetail.filePaths());
@@ -84,7 +84,7 @@ public class SolutionSyncServiceImpl implements SolutionSyncService {
         Problem problem = problemCommandService.findOrCreateProblem(problemInfo);
 
         // 6. 소스 코드 가져오기
-        String sourceCode = commitFetcher.fetchFileContent(token, owner, repo, sourceCodePath, commitSha);
+        String sourceCode = fetcher.fetchFileContent(token, owner, repo, sourceCodePath, commitSha);
 
         // 7. Solution 저장
         saveSolution(user, problem, problemInfo, sourceCode, commitSha, sourceCodePath, commitDetail);
