@@ -1,5 +1,8 @@
 package io.github.seonjiwon.code_combine.domain.user.service;
 
+import io.github.seonjiwon.code_combine.domain.repo.code.RepoErrorCode;
+import io.github.seonjiwon.code_combine.domain.repo.domain.Repo;
+import io.github.seonjiwon.code_combine.domain.repo.repository.RepoRepository;
 import io.github.seonjiwon.code_combine.domain.user.code.UserErrorCode;
 import io.github.seonjiwon.code_combine.domain.user.dto.LoginSuccessResponse;
 import io.github.seonjiwon.code_combine.domain.user.dto.OAuth2UserInfo;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RepoRepository repoRepository;
 
     /**
      * OAuth2 로그인 시 사용자 조회 또는 생성
@@ -50,11 +54,13 @@ public class UserService {
     public LoginSuccessResponse getLoginSuccessUserInfo(Long userId) {
         User user = userRepository.findById(userId)
                                   .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
+        boolean hasRepo = repoRepository.existsByUserId(userId);
 
         return LoginSuccessResponse.builder()
             .userId(user.getId())
             .username(user.getUsername())
             .avatarUrl(user.getAvatarUrl())
+            .hasRepo(hasRepo)
             .build();
     }
 }
