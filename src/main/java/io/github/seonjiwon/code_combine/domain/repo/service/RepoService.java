@@ -1,13 +1,19 @@
 package io.github.seonjiwon.code_combine.domain.repo.service;
 
+import static io.github.seonjiwon.code_combine.domain.repo.dto.GitHubRepoResponse.*;
+
 import io.github.seonjiwon.code_combine.domain.repo.domain.Repo;
+import io.github.seonjiwon.code_combine.domain.repo.dto.GitHubRepoResponse;
 import io.github.seonjiwon.code_combine.domain.repo.repository.RepoRepository;
 import io.github.seonjiwon.code_combine.domain.solution.service.command.InitialSyncService;
 import io.github.seonjiwon.code_combine.domain.user.code.UserErrorCode;
 import io.github.seonjiwon.code_combine.domain.repo.dto.RepoRegisterRequest;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
+import io.github.seonjiwon.code_combine.domain.user.service.TokenService;
 import io.github.seonjiwon.code_combine.global.exception.CustomException;
+import io.github.seonjiwon.code_combine.global.infra.github.GitHubFetcher;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +28,17 @@ public class RepoService {
     private final RepoRepository repoRepository;
     private final UserRepository userRepository;
     private final InitialSyncService initialSyncService;
+    private final TokenService tokenService;
+    private final GitHubFetcher fetcher;
+
+    /**
+     * 사용자 전체 Repository 목록 조회
+     */
+    public RepoList getGithubRepositories(Long userId) {
+        String token = tokenService.getActiveToken(userId);
+        List<String> repoNames = fetcher.fetchUserRepos(token);
+        return RepoList.from(repoNames);
+    }
 
     /**
      * 사용자 Repository 등록 및 초기 동기화
@@ -44,6 +61,7 @@ public class RepoService {
         // 초기 동기화 트리거
         triggerInitialSync(user, repo);
     }
+
 
     /**
      * Repository 엔티티 생성
