@@ -37,7 +37,13 @@ public class CommitSyncFacade {
         String token = tokenService.getActiveToken(user.getId());
         List<String> allCommitShas = fetcher.fetchAllCommitShas(token, owner, repoName);
 
-        allCommitShas.forEach(sha -> syncSingleCommit(user, token, owner, repoName, sha));
+        allCommitShas.forEach(sha -> {
+            try {
+                syncSingleCommit(user, token, owner, repoName, sha);
+            } catch (Exception e) {
+                log.info("커밋 동기화 실패: sha={}, error={}", sha, e.getMessage());
+            }
+        });
 
         solutionSyncService.updateUserSyncStatus(user);
         log.info("전체 커밋 동기화 완료");
@@ -58,7 +64,13 @@ public class CommitSyncFacade {
 
         List<String> commitShas = fetcher.fetchTodayCommitShas(token, owner, repoName);
 
-        commitShas.forEach(sha -> syncSingleCommit(user, token, owner, repoName, sha));
+        commitShas.forEach(sha -> {
+            try {
+                syncSingleCommit(user, token, owner, repoName, sha);
+            } catch (Exception e) {
+                log.info("커밋 동기화 실패: sha={}, error={}", sha, e.getMessage());
+            }
+        });
 
         log.info("오늘 커밋 동기화 완료");
     }
