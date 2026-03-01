@@ -1,6 +1,6 @@
 package io.github.seonjiwon.code_combine.global.scheduler;
 
-import io.github.seonjiwon.code_combine.domain.solution.service.command.SolutionSyncService;
+import io.github.seonjiwon.code_combine.domain.repo.service.facade.CommitSyncFacade;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
 import java.util.List;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SyncScheduler {
     private final UserRepository userRepository;
-    private final SolutionSyncService solutionSyncService;
+    private final CommitSyncFacade commitSyncFacade;
 
     @Scheduled(cron = "0 0 23 * * *", zone = "Asia/Seoul")
     public void scheduleDailySync() {
@@ -23,7 +23,7 @@ public class SyncScheduler {
 
         for (User user : users) {
             try {
-                solutionSyncService.syncTodaySolutions(user.getId());
+                commitSyncFacade.syncTodayCommits(user.getId());
             } catch (Exception e) {
                 log.info("사용자 동기화 실패: userId={}, error={}", user.getId(), e.getMessage());
             }

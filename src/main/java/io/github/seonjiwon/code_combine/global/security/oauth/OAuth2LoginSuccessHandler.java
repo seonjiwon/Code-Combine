@@ -4,7 +4,7 @@ import io.github.seonjiwon.code_combine.domain.repo.repository.RepoRepository;
 import io.github.seonjiwon.code_combine.domain.user.dto.OAuth2UserInfo;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.service.TokenService;
-import io.github.seonjiwon.code_combine.domain.user.service.UserService;
+import io.github.seonjiwon.code_combine.domain.user.service.UserCommandService;
 import io.github.seonjiwon.code_combine.global.security.code.OAuth2ErrorCode;
 import io.github.seonjiwon.code_combine.global.exception.CustomException;
 import io.github.seonjiwon.code_combine.global.security.utils.JwtProvider;
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final UserService userService;
+    private final UserCommandService userCommandService;
     private final TokenService tokenService;
     private final RepoRepository repoRepository;
     private final JwtProvider jwtProvider;
@@ -59,7 +59,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         );
 
         // 2. User 조회 또는 생성
-        User user = userService.findOrCreateUser(userInfo);
+        User user = userCommandService.findOrCreateUser(userInfo);
         log.info("OAuth2 로그인 성공: gitId={}", user.getGitId());
 
         // 3. GitHub AccessToken 저장

@@ -1,12 +1,10 @@
 package io.github.seonjiwon.code_combine.domain.solution.controller;
 
+import io.github.seonjiwon.code_combine.domain.repo.service.facade.CommitSyncFacade;
 import io.github.seonjiwon.code_combine.domain.solution.dto.DashboardResponse;
 import io.github.seonjiwon.code_combine.domain.solution.dto.SolutionResponse;
-import io.github.seonjiwon.code_combine.domain.solution.service.command.SolutionSyncService;
 import io.github.seonjiwon.code_combine.domain.solution.service.query.CommitQueryService;
 import io.github.seonjiwon.code_combine.domain.solution.service.query.SolutionQueryService;
-import io.github.seonjiwon.code_combine.domain.user.domain.User;
-import io.github.seonjiwon.code_combine.domain.user.service.UserService;
 import io.github.seonjiwon.code_combine.global.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "풀이 API", description = "풀이 동기화 및 조회 기능을 제공합니다.")
 public class SolutionController {
 
-    private final SolutionSyncService solutionSyncService;
+    private final CommitSyncFacade commitSyncFacade;
     private final SolutionQueryService solutionQueryService;
     private final CommitQueryService commitQueryService;
 
@@ -40,7 +38,7 @@ public class SolutionController {
     public CustomResponse<String> syncTodayCommits(
         @AuthenticationPrincipal Long userId
     ) {
-        solutionSyncService.syncTodaySolutions(userId);
+        commitSyncFacade.syncTodayCommits(userId);
         return CustomResponse.onSuccess("동기화 성공!");
     }
 
