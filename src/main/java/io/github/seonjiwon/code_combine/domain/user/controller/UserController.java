@@ -1,7 +1,8 @@
 package io.github.seonjiwon.code_combine.domain.user.controller;
 
 import io.github.seonjiwon.code_combine.domain.user.dto.LoginSuccessResponse;
-import io.github.seonjiwon.code_combine.domain.user.service.UserService;
+import io.github.seonjiwon.code_combine.domain.user.service.UserCommandService;
+import io.github.seonjiwon.code_combine.domain.user.service.UserQueryService;
 import io.github.seonjiwon.code_combine.global.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "사용자 API", description = "로그인한 사용자 정보를 조회합니다.")
 public class UserController {
 
-    private final UserService userService;
+    private final UserQueryService userQueryService;
 
     @GetMapping("/me")
     @Operation(
@@ -30,7 +30,7 @@ public class UserController {
     public CustomResponse<LoginSuccessResponse> getLoginSuccessUserInfo(
         @AuthenticationPrincipal Long userId) {
 
-        LoginSuccessResponse loginSuccessUserInfo = userService.getLoginSuccessUserInfo(userId);
+        LoginSuccessResponse loginSuccessUserInfo = userQueryService.getLoginSuccessUserInfo(userId);
         return CustomResponse.onSuccess(loginSuccessUserInfo);
     }
 }
