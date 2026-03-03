@@ -64,15 +64,23 @@ public class CommitSyncFacade {
 
         List<String> commitShas = fetcher.fetchTodayCommitShas(token, owner, repoName);
 
-        commitShas.forEach(sha -> {
+        boolean hasFailed = false;
+
+        for (String sha : commitShas) {
             try {
                 singleCommitSynchronizer.syncSingleCommit(user, token, owner, repoName, sha);
             } catch (Exception e) {
-                log.info("커밋 동기화 실패: sha={}, error={}", sha, e.getMessage());
+                hasFailed = true;
+                log.warn("커밋 동기화 실패: sha={}, error={}", sha, e.getMessage());
             }
-        });
+        }
 
-        log.info("오늘 커밋 동기화 완료");
+        if (hasFailed) {
+            repoCommandService.failSync(repo);
+            log.warn("오늘 커밋 동기화 부분 실패: owner={}", owner);
+        } else {
+            log.info("오늘 커밋 동기화 완료: owner={}", owner);
+        }
     }
 
 

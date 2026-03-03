@@ -48,15 +48,23 @@ public class AsyncCommitSynchronizer implements CommitSynchronizer {
             return;
         }
 
-        allCommitShas.forEach(sha -> {
+        boolean hasFailed = false;
+
+        for (String sha : allCommitShas) {
             try {
                 singleCommitSynchronizer.syncSingleCommit(user, token, owner, repoName, sha);
             } catch (Exception e) {
+                hasFailed = true;
                 log.warn("커밋 동기화 실패: sha={}, error={}", sha, e.getMessage());
             }
-        });
+        }
 
-        repoCommandService.completeSync(repo);
-        log.info("전체 커밋 동기화 완료");
+        if (hasFailed) {
+            repoCommandService.failSync(repo);
+            log.warn("커밋 동기화 부분 실패");
+        } else {
+            repoCommandService.completeSync(repo);
+            log.info("전체 커밋 동기화 완료");
+        }
     }
 }
