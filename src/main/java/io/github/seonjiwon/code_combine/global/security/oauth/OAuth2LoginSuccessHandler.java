@@ -1,6 +1,5 @@
 package io.github.seonjiwon.code_combine.global.security.oauth;
 
-import io.github.seonjiwon.code_combine.domain.repo.repository.RepoRepository;
 import io.github.seonjiwon.code_combine.domain.user.dto.OAuth2UserInfo;
 import io.github.seonjiwon.code_combine.domain.user.domain.User;
 import io.github.seonjiwon.code_combine.domain.user.service.TokenService;
@@ -23,17 +22,17 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
     private final UserCommandService userCommandService;
     private final TokenService tokenService;
     private final JwtProvider jwtProvider;
-    private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
+
 
     @Value("${frontend.url}")
     private String frontendUrl;
