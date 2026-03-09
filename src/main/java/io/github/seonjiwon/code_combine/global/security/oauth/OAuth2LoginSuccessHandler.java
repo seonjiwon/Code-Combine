@@ -23,6 +23,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 @Component
@@ -31,7 +32,6 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private final UserCommandService userCommandService;
     private final TokenService tokenService;
-    private final RepoRepository repoRepository;
     private final JwtProvider jwtProvider;
     private final OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
@@ -73,7 +73,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         response.addCookie(cookie);
 
         // 6. 리다이렉트
-        String redirectUrl = determineRedirectUrl(user);
+        String redirectUrl = frontendUrl + "/auth/callback";
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 
@@ -112,13 +112,4 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         return cookie;
     }
 
-    private String determineRedirectUrl(User user) {
-        boolean hasRepo = repoRepository.findByUserId(user.getId()).isPresent();
-
-        if (hasRepo) {
-            return frontendUrl + "/dashboard";
-        } else {
-            return frontendUrl + "/auth/repo";
-        }
-    }
 }
