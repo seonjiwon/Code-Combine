@@ -15,6 +15,7 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -68,8 +69,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String jwt = jwtProvider.createToken(user.getId());
 
         // 5. jwt 를 쿠키에 저장
-        Cookie cookie = createJwtCookie(jwt);
-        response.addCookie(cookie);
+        addJwtCookie(response, jwt);
 
         // 6. 리다이렉트
         String redirectUrl = "http://" + frontendUrl + "/auth/callback";
@@ -92,23 +92,16 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         return client.getAccessToken().getTokenValue();
     }
 
-    private Cookie createJwtCookie(String jwt) {
-        Cookie cookie = new Cookie("accessToken", jwt);
+    private void addJwtCookie(HttpServletResponse response, String jwt) {
+        ResponseCookie cookie = ResponseCookie.from("accessToken", jwt)
+                                              .httpOnly(true)
+                                              .secure(true)
+                                              .path("/")
+                                              .maxAge(jwtExpiration / 1000)
+                                              .sameSite("None")
+                                              .build();
 
-        cookie.setHttpOnly(true); // HttpOnly: JavaScript로 접근 불가 (XSS 방어)
-
-        // Secure: HTTPS에서만 전송 (개발 환경에서는 false)
-        cookie.setSecure(false);  // 운영 환경에서는 true로 변경
-
-        // Path: 모든 경로에서 쿠키 전송
-        cookie.setPath("/");
-
-        cookie.setMaxAge((int) (jwtExpiration / 1000));  // MaxAge: 쿠키 유효 기간 (jwt와 동일하게 설정)
-
-        // Domain: localhost (운영 환경에서는 실제 도메인으로 변경)
-        // cookie.setDomain("localhost");  // 필요시 설정
-
-        return cookie;
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 
 }
