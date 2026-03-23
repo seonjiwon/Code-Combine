@@ -1,6 +1,8 @@
 package io.github.seonjiwon.code_combine.domain.problem.dto;
 
-import io.github.seonjiwon.code_combine.domain.problem.domain.Problem;
+
+import io.github.seonjiwon.code_combine.domain.problem.entity.Problem;
+import io.github.seonjiwon.code_combine.domain.solution.entity.Solution;
 import java.util.List;
 import lombok.Builder;
 
@@ -29,16 +31,17 @@ public class ProblemsResponse {
         List<SolvedUser> solvedUsers
     ) {
 
-        public static SolveInfo from(Problem problem, List<UserSolverProjection> solvers) {
+        public static SolveInfo from(Problem problem, List<Solution> solutions) {
+            List<SolvedUser> solvedUsers = solutions.stream()
+                                                    .map(SolvedUser::from)
+                                                    .toList();
+
             return SolveInfo.builder()
                             .problemId(problem.getId())
                             .problemNumber(problem.getProblemNumber())
                             .problemName(problem.getTitle())
-                            .solvedUserCount(solvers.size())
-                            .solvedUsers(solvers.stream()
-                                                .map(SolvedUser::from)
-                                                .toList())
-
+                            .solvedUserCount(solvedUsers.size())
+                            .solvedUsers(solvedUsers)
                             .build();
         }
     }
@@ -49,10 +52,10 @@ public class ProblemsResponse {
         String avatarUrl
     ) {
 
-        public static SolvedUser from(UserSolverProjection solver) {
+        public static SolvedUser from(Solution solution) {
             return SolvedUser.builder()
-                             .username(solver.username())
-                             .avatarUrl(solver.avatarUrl())
+                             .username(solution.getUser().getUsername())
+                             .avatarUrl(solution.getUser().getAvatarUrl())
                              .build();
         }
     }

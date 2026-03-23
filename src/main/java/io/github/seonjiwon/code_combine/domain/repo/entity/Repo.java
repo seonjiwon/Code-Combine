@@ -1,6 +1,6 @@
-package io.github.seonjiwon.code_combine.domain.repo.domain;
+package io.github.seonjiwon.code_combine.domain.repo.entity;
 
-import io.github.seonjiwon.code_combine.domain.user.domain.User;
+import io.github.seonjiwon.code_combine.domain.user.entity.User;
 import io.github.seonjiwon.code_combine.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

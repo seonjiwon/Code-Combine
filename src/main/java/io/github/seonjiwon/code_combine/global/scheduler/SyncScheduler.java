@@ -1,11 +1,11 @@
 package io.github.seonjiwon.code_combine.global.scheduler;
 
-import io.github.seonjiwon.code_combine.domain.repo.domain.Repo;
-import io.github.seonjiwon.code_combine.domain.repo.domain.SyncStatus;
+import io.github.seonjiwon.code_combine.domain.repo.entity.Repo;
+import io.github.seonjiwon.code_combine.domain.repo.entity.SyncStatus;
 import io.github.seonjiwon.code_combine.domain.repo.repository.RepoRepository;
 import io.github.seonjiwon.code_combine.domain.repo.service.CommitSyncFacade;
 import io.github.seonjiwon.code_combine.domain.repo.service.CommitSynchronizer;
-import io.github.seonjiwon.code_combine.domain.user.domain.User;
+import io.github.seonjiwon.code_combine.domain.user.entity.User;
 import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

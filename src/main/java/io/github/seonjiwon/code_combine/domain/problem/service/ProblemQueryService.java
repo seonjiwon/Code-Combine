@@ -1,10 +1,11 @@
 package io.github.seonjiwon.code_combine.domain.problem.service;
 
-import io.github.seonjiwon.code_combine.domain.problem.domain.Problem;
 import io.github.seonjiwon.code_combine.domain.problem.dto.ProblemsResponse.ProblemSolveList;
 import io.github.seonjiwon.code_combine.domain.problem.dto.ProblemsResponse.SolveInfo;
-import io.github.seonjiwon.code_combine.domain.problem.dto.UserSolverProjection;
+import io.github.seonjiwon.code_combine.domain.problem.entity.Problem;
 import io.github.seonjiwon.code_combine.domain.problem.repository.ProblemRepository;
+import io.github.seonjiwon.code_combine.domain.solution.entity.Solution;
+import io.github.seonjiwon.code_combine.domain.solution.repository.SolutionRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProblemQueryService {
 
     private final ProblemRepository problemRepository;
+    private final SolutionRepository solutionRepository;
     private static final int PAGE_SIZE = 10;
 
     /**
@@ -42,7 +44,7 @@ public class ProblemQueryService {
         String nextCursor = generateNextCursor(problems, hasNext);
 
         // 3. 문제별 풀이자 조회
-        Map<Long, List<UserSolverProjection>> solverMap = groupSolversByProblem(problems);
+        Map<Long, List<Solution>> solverMap = groupSolversByProblem(problems);
 
         // 4. 응답 생성
         List<SolveInfo> solveInfos = buildSolveInfoList(problems, solverMap);
@@ -60,11 +62,10 @@ public class ProblemQueryService {
             ? problemRepository.findByProblemNumberStartingWith(keyword)
             : problemRepository.findByTitleStartingWith(keyword);
 
-        Map<Long, List<UserSolverProjection>> solverMap = groupSolversByProblem(problems);
+        Map<Long, List<Solution>> solverMap = groupSolversByProblem(problems);
         List<SolveInfo> solveInfos = buildSolveInfoList(problems, solverMap);
         return ProblemSolveList.from(solveInfos, null);
     }
-
 
     /**
      * 커서 기반으로 문제 조회
@@ -89,37 +90,35 @@ public class ProblemQueryService {
     }
 
     /**
-     * 문제별 풀이자 조회 및 그룹핑
+     * 문제별 풀이 조회 및 그룹핑
      */
-    private Map<Long, List<UserSolverProjection>> groupSolversByProblem(List<Problem> problems) {
+    private Map<Long, List<Solution>> groupSolversByProblem(List<Problem> problems) {
         if (problems.isEmpty()) {
             return Map.of();
         }
 
-        // 1. problemId 가져오기
         List<Long> problemIds = problems.stream()
                                         .map(Problem::getId)
                                         .toList();
 
-        // 2. 문제를 푼 사용자 전부 조회 (N+1 방지를 위해 한번에)
         log.info("문제를 푼 사용자 조회: problemIds 수={}", problemIds.size());
-        List<UserSolverProjection> solvers = problemRepository.findSolversByProblemIds(problemIds);
-        log.info("조회된 풀이자 수: {}", solvers.size());
+        List<Solution> solutions = solutionRepository.findAllByProblemIdsWithUser(problemIds);
+        log.info("조회된 풀이 수: {}", solutions.size());
 
-        // 3. 문제 번호 별로 그룹핑
-        return solvers.stream()
-                      .collect(Collectors.groupingBy(UserSolverProjection::problemId));
+        return solutions.stream()
+                        .collect(Collectors.groupingBy(
+                            solution -> solution.getProblem().getId()));
     }
 
     /**
      * SolveInfo 리스트 생성
      */
     private List<SolveInfo> buildSolveInfoList(List<Problem> problems,
-                                               Map<Long, List<UserSolverProjection>> solverMap) {
+                                               Map<Long, List<Solution>> solverMap) {
         return problems.stream()
                        .map(problem -> SolveInfo.from(
                            problem,
-                           solverMap.get(problem.getId())
+                           solverMap.getOrDefault(problem.getId(), List.of())
                        ))
                        .toList();
     }

@@ -2,7 +2,7 @@ package io.github.seonjiwon.code_combine.domain.user.service;
 
 import io.github.seonjiwon.code_combine.domain.repo.repository.RepoRepository;
 import io.github.seonjiwon.code_combine.domain.user.code.UserErrorCode;
-import io.github.seonjiwon.code_combine.domain.user.domain.User;
+import io.github.seonjiwon.code_combine.domain.user.entity.User;
 import io.github.seonjiwon.code_combine.domain.user.dto.LoginSuccessResponse;
 import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
 import io.github.seonjiwon.code_combine.global.exception.CustomException;

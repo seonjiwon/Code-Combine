@@ -1,10 +1,10 @@
 package io.github.seonjiwon.code_combine.domain.repo.service;
 
-import io.github.seonjiwon.code_combine.domain.repo.domain.Repo;
-import io.github.seonjiwon.code_combine.domain.repo.domain.SyncStatus;
+import io.github.seonjiwon.code_combine.domain.repo.entity.Repo;
+import io.github.seonjiwon.code_combine.domain.repo.entity.SyncStatus;
 import io.github.seonjiwon.code_combine.domain.repo.dto.RepoRegisterRequest;
 import io.github.seonjiwon.code_combine.domain.repo.dto.RepoRegistrationResult;
-import io.github.seonjiwon.code_combine.domain.user.domain.User;
+import io.github.seonjiwon.code_combine.domain.user.entity.User;
 import io.github.seonjiwon.code_combine.domain.user.service.TokenService;
 import io.github.seonjiwon.code_combine.domain.user.service.UserQueryService;
 import io.github.seonjiwon.code_combine.global.infra.github.GitHubFetcher;

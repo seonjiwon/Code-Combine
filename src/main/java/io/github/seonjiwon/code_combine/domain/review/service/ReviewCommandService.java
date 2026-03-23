@@ -1,17 +1,12 @@
 package io.github.seonjiwon.code_combine.domain.review.service;
 
-import io.github.seonjiwon.code_combine.domain.review.domain.Review;
+import io.github.seonjiwon.code_combine.domain.review.entity.Review;
 import io.github.seonjiwon.code_combine.domain.review.dto.ReviewRequest;
 import io.github.seonjiwon.code_combine.domain.review.repository.ReviewRepository;
-import io.github.seonjiwon.code_combine.domain.solution.code.SolutionErrorCode;
-import io.github.seonjiwon.code_combine.domain.solution.domain.Solution;
-import io.github.seonjiwon.code_combine.domain.solution.repository.SolutionRepository;
+import io.github.seonjiwon.code_combine.domain.solution.entity.Solution;
 import io.github.seonjiwon.code_combine.domain.solution.service.query.SolutionQueryService;
-import io.github.seonjiwon.code_combine.domain.user.code.UserErrorCode;
-import io.github.seonjiwon.code_combine.domain.user.domain.User;
-import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
+import io.github.seonjiwon.code_combine.domain.user.entity.User;
 import io.github.seonjiwon.code_combine.domain.user.service.UserQueryService;
-import io.github.seonjiwon.code_combine.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

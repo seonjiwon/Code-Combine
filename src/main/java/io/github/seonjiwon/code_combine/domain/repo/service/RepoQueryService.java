@@ -1,7 +1,7 @@
 package io.github.seonjiwon.code_combine.domain.repo.service;
 
 import io.github.seonjiwon.code_combine.domain.repo.code.RepoErrorCode;
-import io.github.seonjiwon.code_combine.domain.repo.domain.Repo;
+import io.github.seonjiwon.code_combine.domain.repo.entity.Repo;
 import io.github.seonjiwon.code_combine.domain.repo.repository.RepoRepository;
 import io.github.seonjiwon.code_combine.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;

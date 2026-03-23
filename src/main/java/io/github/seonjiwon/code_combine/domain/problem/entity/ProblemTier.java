@@ -1,4 +1,4 @@
-package io.github.seonjiwon.code_combine.domain.problem.domain;
+package io.github.seonjiwon.code_combine.domain.problem.entity;
 
 public enum ProblemTier {
     BRONZE_5, BRONZE_4, BRONZE_3, BRONZE_2, BRONZE_1,
