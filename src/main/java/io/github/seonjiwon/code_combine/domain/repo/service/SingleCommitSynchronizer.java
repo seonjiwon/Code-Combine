@@ -3,7 +3,7 @@ package io.github.seonjiwon.code_combine.domain.repo.service;
 import io.github.seonjiwon.code_combine.domain.problem.dto.ProblemInfo;
 import io.github.seonjiwon.code_combine.domain.solution.service.command.SolutionSyncService;
 import io.github.seonjiwon.code_combine.domain.solution.utils.BaekjoonFilePathParser;
-import io.github.seonjiwon.code_combine.domain.user.domain.User;
+import io.github.seonjiwon.code_combine.domain.user.entity.User;
 import io.github.seonjiwon.code_combine.global.infra.github.GitHubFetcher;
 import io.github.seonjiwon.code_combine.global.infra.github.dto.GitHubCommitDetail;
 import java.util.List;
@@ -57,7 +57,7 @@ public class SingleCommitSynchronizer {
      */
     private String findSourceCodePath(List<String> filePaths) {
         return filePaths.stream()
-                        .filter(path -> !path.startsWith("README.md"))
+                        .filter(path -> !path.endsWith("README.md"))
                         .findFirst()
                         .orElse(null);
     }

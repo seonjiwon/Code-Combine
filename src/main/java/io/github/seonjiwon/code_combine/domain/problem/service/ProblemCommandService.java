@@ -1,6 +1,6 @@
 package io.github.seonjiwon.code_combine.domain.problem.service;
 
-import io.github.seonjiwon.code_combine.domain.problem.domain.Problem;
+import io.github.seonjiwon.code_combine.domain.problem.entity.Problem;
 import io.github.seonjiwon.code_combine.domain.problem.repository.ProblemRepository;
 import io.github.seonjiwon.code_combine.domain.problem.dto.ProblemInfo;
 import lombok.RequiredArgsConstructor;

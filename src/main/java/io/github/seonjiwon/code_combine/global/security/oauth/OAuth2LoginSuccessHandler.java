@@ -1,14 +1,13 @@
 package io.github.seonjiwon.code_combine.global.security.oauth;
 
 import io.github.seonjiwon.code_combine.domain.user.dto.OAuth2UserInfo;
-import io.github.seonjiwon.code_combine.domain.user.domain.User;
+import io.github.seonjiwon.code_combine.domain.user.entity.User;
 import io.github.seonjiwon.code_combine.domain.user.service.TokenService;
 import io.github.seonjiwon.code_combine.domain.user.service.UserCommandService;
 import io.github.seonjiwon.code_combine.global.security.code.OAuth2ErrorCode;
 import io.github.seonjiwon.code_combine.global.exception.CustomException;
 import io.github.seonjiwon.code_combine.global.security.utils.JwtProvider;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;

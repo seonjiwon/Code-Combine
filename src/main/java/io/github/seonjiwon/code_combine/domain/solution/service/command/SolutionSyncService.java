@@ -1,12 +1,11 @@
 package io.github.seonjiwon.code_combine.domain.solution.service.command;
 
-import io.github.seonjiwon.code_combine.domain.problem.domain.Problem;
+import io.github.seonjiwon.code_combine.domain.problem.entity.Problem;
 import io.github.seonjiwon.code_combine.domain.problem.dto.ProblemInfo;
 import io.github.seonjiwon.code_combine.domain.problem.service.ProblemCommandService;
-import io.github.seonjiwon.code_combine.domain.solution.domain.Solution;
+import io.github.seonjiwon.code_combine.domain.solution.entity.Solution;
 import io.github.seonjiwon.code_combine.domain.solution.repository.SolutionRepository;
-import io.github.seonjiwon.code_combine.domain.user.domain.User;
-import io.github.seonjiwon.code_combine.domain.user.repository.UserRepository;
+import io.github.seonjiwon.code_combine.domain.user.entity.User;
 import io.github.seonjiwon.code_combine.global.infra.github.dto.GitHubCommitDetail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

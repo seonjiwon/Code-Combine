@@ -1,9 +1,8 @@
-package io.github.seonjiwon.code_combine.domain.problem.domain;
+package io.github.seonjiwon.code_combine.domain.user.entity;
 
+import io.github.seonjiwon.code_combine.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,30 +14,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "problems")
+@Table(name="users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Problem {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 50)
+    private String username;
+
     @Column(nullable = false, unique = true)
-    private int problemNumber;
-
-    @Column(nullable = false, length = 200)
-    private String title;
-
-    @Column(nullable = false, length = 500)
-    private String problemUrl;
-
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20)
-    private ProblemTier tier;
+    private Integer gitId;
 
     @Column(length = 500)
-    private String tags;
+    private String avatarUrl;
 }

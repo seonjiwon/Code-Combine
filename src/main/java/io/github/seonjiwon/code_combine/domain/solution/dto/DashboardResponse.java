@@ -13,8 +13,8 @@ public class DashboardResponse {
 
         public static WeeklyCommitInfo from(List<WeeklyState> weeklyStats) {
             return WeeklyCommitInfo.builder()
-                .weeklyStats(weeklyStats)
-                .build();
+                                   .weeklyStats(weeklyStats)
+                                   .build();
         }
     }
 
@@ -27,10 +27,10 @@ public class DashboardResponse {
 
         public static WeeklyState from(LocalDate date, List<UserCommit> userCommits) {
             return WeeklyState.builder()
-                .date(date)
-                .dailyTotalUser(userCommits.size())
-                .userCommits(userCommits)
-                .build();
+                              .date(date)
+                              .dailyTotalUser(userCommits.size())
+                              .userCommits(userCommits)
+                              .build();
         }
     }
 
@@ -41,14 +41,5 @@ public class DashboardResponse {
         String avatarUrl,
         Integer commitCount
     ) {
-
-        public static UserCommit from(DailyUserCommitCountProjection c) {
-            return UserCommit.builder()
-                .userId(c.userId())
-                .username(c.username())
-                .avatarUrl(c.avatarUrl())
-                .commitCount(c.commitCount().intValue())
-                .build();
-        }
     }
 }
