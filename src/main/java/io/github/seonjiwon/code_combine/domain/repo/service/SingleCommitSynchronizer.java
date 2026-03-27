@@ -27,7 +27,7 @@ public class SingleCommitSynchronizer {
                                   String commitSha) {
         // 1. 중복 체크
         if (solutionSyncService.existsByCommitSha(commitSha)) {
-            log.info("이미 동기화된 커밋: {}", commitSha);
+            log.debug("이미 동기화된 커밋: {}", commitSha);
             return;
         }
 
@@ -37,7 +37,7 @@ public class SingleCommitSynchronizer {
         // 3. 소스 코드 파일 찾기
         String sourceCodePath = findSourceCodePath(commitDetail.filePaths());
         if (sourceCodePath == null) {
-            log.info("소스 코드 파일 없음: commitSha={}", commitSha);
+            log.debug("소스 코드 파일 없음: commitSha={}", commitSha);
             return;
         }
 

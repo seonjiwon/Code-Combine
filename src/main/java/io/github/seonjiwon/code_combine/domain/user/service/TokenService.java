@@ -42,7 +42,7 @@ public class TokenService {
                                  .status(TokenStatus.ACTIVATED)
                                  .build();
         gitTokenRepository.save(newToken);
-        log.info("사용자 {} 토큰 저장 완료", user.getGitId());
+        log.debug("사용자 {} 토큰 저장 완료", user.getGitId());
     }
 
     private LocalDateTime calculateExpiration() {

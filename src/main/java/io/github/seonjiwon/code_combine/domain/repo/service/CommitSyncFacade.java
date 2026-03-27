@@ -39,11 +39,12 @@ public class CommitSyncFacade {
 
         // 동기화가 완료 된 경우
         if (result.repo().getSyncStatus() == SyncStatus.COMPLETED) {
-            log.info("레포 {}는 이미 동기화 완료 상태입니다.", result.repo().getName());
+            log.debug("레포 {}는 이미 동기화 완료 상태입니다.", result.repo().getName());
             return;
         }
 
         log.info("초기 동기화 시작: userId={}, repo={}", userId, result.repo().getName());
+
         commitSynchronizer.syncAllCommits(userId, result.repo().getId());
     }
 
@@ -60,7 +61,7 @@ public class CommitSyncFacade {
         String repoName = repo.getName();
         String token = tokenService.getActiveToken(userId);
 
-        log.info("오늘 커밋 동기화 시작: owner={}", owner);
+        log.info("오늘 커밋 동기화 시작: owner={}, repo={}", owner, repoName);
 
         List<String> commitShas = fetcher.fetchTodayCommitShas(token, owner, repoName);
 
@@ -71,15 +72,15 @@ public class CommitSyncFacade {
                 singleCommitSynchronizer.syncSingleCommit(user, token, owner, repoName, sha);
             } catch (Exception e) {
                 hasFailed = true;
-                log.warn("커밋 동기화 실패: sha={}, error={}", sha, e.getMessage());
+                log.warn("커밋 동기화 실패: sha={}", sha, e);
             }
         }
 
         if (hasFailed) {
             repoCommandService.failSync(repo);
-            log.warn("오늘 커밋 동기화 부분 실패: owner={}", owner);
+            log.warn("오늘 커밋 동기화 부분 실패: owner={}, repo={}", owner, repoName);
         } else {
-            log.info("오늘 커밋 동기화 완료: owner={}", owner);
+            log.info("오늘 커밋 동기화 완료: owner={}, repo={}", owner, repoName);
         }
     }
 

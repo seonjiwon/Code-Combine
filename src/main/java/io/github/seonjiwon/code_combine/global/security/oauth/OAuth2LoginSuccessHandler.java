@@ -46,13 +46,11 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                                         Authentication authentication)
         throws IOException, ServletException {
 
-        log.info("OAuth2 로그인 성공");
-
         // 1. GitHub 에서 받은 사용자 정보 추출
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String accessToken = extractAccessToken(authentication);
 
-        log.info("사용자 정보 : {}", oAuth2User.getAttributes());
+        log.debug("OAuth2 사용자 정보: {}", oAuth2User.getAttributes());
         OAuth2UserInfo userInfo = OAuth2UserInfo.from(
             oAuth2User.getAttributes()
         );

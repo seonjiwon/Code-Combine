@@ -38,7 +38,7 @@ public class UserCommandService {
             .build();
 
         User savedUser = userRepository.save(newUser);
-        log.info("새로운 사용자 생성: gitId={}, username={}", savedUser.getGitId(), savedUser.getUsername());
+        log.debug("새로운 사용자 생성: gitId={}, username={}", savedUser.getGitId(), savedUser.getUsername());
 
         return savedUser;
     }

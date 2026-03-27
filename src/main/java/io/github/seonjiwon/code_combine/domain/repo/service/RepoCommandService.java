@@ -27,7 +27,7 @@ public class RepoCommandService {
         User user = userQueryService.getById(userId);
 
         if (repoRepository.existsByUserId(userId)) {
-            log.info("사용자 {}의 Repository 는 이미 등록이 되어 있습니다.", userId);
+            log.debug("사용자 {}의 Repository 는 이미 등록이 되어 있습니다.", userId);
             return null;
         }
 
@@ -37,7 +37,7 @@ public class RepoCommandService {
                         .build();
 
         repoRepository.save(repo);
-        log.info("Repository 등록 완료: userId={}, repoName={}", userId, repo.getName());
+        log.debug("Repository 등록 완료: userId={}, repoName={}", userId, repo.getName());
 
         return new RepoRegistrationResult(user, repo);
     }

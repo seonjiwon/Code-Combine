@@ -36,7 +36,7 @@ public class ProblemCommandService {
             .build();
 
         Problem savedProblem = problemRepository.save(problem);
-        log.info("새로운 문제 생성: 번호={}, 제목={}", savedProblem.getProblemNumber(), savedProblem.getTitle());
+        log.debug("새로운 문제 생성: 번호={}, 제목={}", savedProblem.getProblemNumber(), savedProblem.getTitle());
 
         return savedProblem;
     }

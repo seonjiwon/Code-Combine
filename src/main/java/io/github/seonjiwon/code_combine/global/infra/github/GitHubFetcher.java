@@ -28,7 +28,7 @@ public class GitHubFetcher {
      * Repository 목록 불러오기
      */
     public List<String> fetchUserRepos(String token) {
-        log.info("사용자 Repository 조회");
+        log.debug("사용자 Repository 조회");
         String response = apiClient.getUserRepos(token);
         return parser.parseRepos(response);
     }
@@ -42,12 +42,12 @@ public class GitHubFetcher {
         ZonedDateTime since = today.atStartOfDay(KST).withZoneSameInstant(ZoneOffset.UTC);
         ZonedDateTime until = today.plusDays(1).atStartOfDay(KST).withZoneSameInstant(ZoneOffset.UTC);
 
-        log.info("오늘 커밋 조회: {}/{}, 기간: {} ~ {}", owner, repo, since, until);
+        log.debug("오늘 커밋 조회: {}/{}, 기간: {} ~ {}", owner, repo, since, until);
 
         String response = apiClient.getCommits(token, owner, repo, since, until);
         List<String> commitShas = parser.parseCommitShas(response);
 
-        log.info("오늘 커밋 {} 개 발견", commitShas.size());
+        log.debug("오늘 커밋 {} 개 발견", commitShas.size());
         return commitShas;
     }
 
@@ -79,7 +79,7 @@ public class GitHubFetcher {
         // 오래된 커밋부터 처리
         Collections.reverse(allCommitShas);
 
-        log.info("전체 커밋 조회 완료: 총 {} 개", allCommitShas.size());
+        log.debug("전체 커밋 조회 완료: 총 {} 개", allCommitShas.size());
         return allCommitShas;
     }
 

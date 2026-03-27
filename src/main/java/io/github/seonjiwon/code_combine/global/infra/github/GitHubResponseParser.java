@@ -34,7 +34,7 @@ public class GitHubResponseParser {
                 repoNames.add(repoNode.get("name").asText());
             }
 
-            log.info("레포지토리 {} 개 파싱 완료", repoNames.size());
+            log.debug("레포지토리 {} 개 파싱 완료", repoNames.size());
             return repoNames;
         } catch (JsonProcessingException e) {
             log.error("레포지토리 목록 파싱 실패", e);

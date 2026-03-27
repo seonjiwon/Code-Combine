@@ -33,7 +33,7 @@ public class SyncScheduler {
             try {
                 commitSyncFacade.syncTodayCommits(user.getId());
             } catch (Exception e) {
-                log.info("사용자 동기화 실패: userId={}, error={}", user.getId(), e.getMessage());
+                log.warn("사용자 동기화 실패: userId={}", user.getId(), e);
             }
 
         }
@@ -60,8 +60,8 @@ public class SyncScheduler {
             try {
                 commitSynchronizer.syncAllCommits(repo.getUser().getId(), repo.getId());
             } catch (Exception e) {
-                log.warn("재시도 실패: repoId={}, retryCount={}, error={}", repo.getId(),
-                    repo.getRetryCount(), e.getMessage());
+                log.warn("재시도 실패: repoId={}, retryCount={}", repo.getId(),
+                    repo.getRetryCount(), e);
             }
         }
 

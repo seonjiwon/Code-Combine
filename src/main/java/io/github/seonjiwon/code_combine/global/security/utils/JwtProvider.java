@@ -91,7 +91,7 @@ public class JwtProvider {
             getClaims(token);
             return true;
         } catch (Exception e) {
-            log.error("유효하지 않은 JWT 토큰: {}", e.getMessage());
+            log.warn("유효하지 않은 JWT 토큰: {}", e.getMessage());
             return false;
         }
     }

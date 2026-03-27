@@ -50,6 +50,6 @@ public class SolutionSyncService {
                                     .build();
 
         solutionRepository.save(solution);
-        log.info("풀이 저장 완료: 문제 번호={}, 사용자={}", problem.getProblemNumber(), user.getUsername());
+        log.debug("풀이 저장 완료: 문제 번호={}, 사용자={}", problem.getProblemNumber(), user.getUsername());
     }
 }
