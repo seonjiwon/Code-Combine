@@ -24,8 +24,6 @@ public class ReviewCommandService {
     private final UserQueryService userQueryService;
 
     public void createReview(Long userId, Long solutionId, ReviewRequest request) {
-        log.info("Reviewer: {} 등록 시작", userId);
-
         Solution solution = solutionQueryService.getById(solutionId);
         User reviewer = userQueryService.getById(userId);
 
@@ -37,6 +35,6 @@ public class ReviewCommandService {
             .build();
 
         reviewRepository.save(review);
-        log.info("Reviewer: {} 등록 완료", userId);
+        log.debug("리뷰 등록 완료: userId={}, solutionId={}", userId, solutionId);
     }
 }

@@ -31,7 +31,7 @@ public class ProblemQueryService {
      * 문제 목록 조회 (커서 기반 페이지네이션)
      */
     public ProblemSolveList getProblemList(String cursor) {
-        log.info("문제 목록 조회 시작");
+        log.debug("문제 목록 조회: cursor={}", cursor);
 
         // 1. 문제 조회 (+1개 더 조회하여 hasNext 판단)
         List<Problem> problems = fetchProblems(cursor, PAGE_SIZE + 1);
@@ -48,8 +48,6 @@ public class ProblemQueryService {
 
         // 4. 응답 생성
         List<SolveInfo> solveInfos = buildSolveInfoList(problems, solverMap);
-
-        log.info("문제 목록 조회 완료");
 
         return ProblemSolveList.from(solveInfos, nextCursor);
     }
@@ -101,9 +99,9 @@ public class ProblemQueryService {
                                         .map(Problem::getId)
                                         .toList();
 
-        log.info("문제를 푼 사용자 조회: problemIds 수={}", problemIds.size());
+        log.debug("문제를 푼 사용자 조회: problemIds 수={}", problemIds.size());
         List<Solution> solutions = solutionRepository.findAllByProblemIdsWithUser(problemIds);
-        log.info("조회된 풀이 수: {}", solutions.size());
+        log.debug("조회된 풀이 수: {}", solutions.size());
 
         return solutions.stream()
                         .collect(Collectors.groupingBy(

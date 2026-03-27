@@ -44,7 +44,7 @@ public class AsyncCommitSynchronizer implements CommitSynchronizer {
             allCommitShas = fetcher.fetchAllCommitShas(token, owner, repoName);
         } catch (Exception e) {
             repoCommandService.failSync(repo);
-            log.error("동기화 준비 실패: owner={}, error={}", owner, e.getMessage());
+            log.error("동기화 준비 실패: owner={}, repo={}", owner, repoName, e);
             return;
         }
 
@@ -55,16 +55,16 @@ public class AsyncCommitSynchronizer implements CommitSynchronizer {
                 singleCommitSynchronizer.syncSingleCommit(user, token, owner, repoName, sha);
             } catch (Exception e) {
                 hasFailed = true;
-                log.warn("커밋 동기화 실패: sha={}, error={}", sha, e.getMessage());
+                log.warn("커밋 동기화 실패: sha={}", sha, e);
             }
         }
 
         if (hasFailed) {
             repoCommandService.failSync(repo);
-            log.warn("커밋 동기화 부분 실패");
+            log.warn("커밋 동기화 부분 실패: owner={}, repo={}", owner, repoName);
         } else {
             repoCommandService.completeSync(repo);
-            log.info("전체 커밋 동기화 완료");
+            log.info("전체 커밋 동기화 완료: owner={}, repo={}", owner, repoName);
         }
     }
 }
