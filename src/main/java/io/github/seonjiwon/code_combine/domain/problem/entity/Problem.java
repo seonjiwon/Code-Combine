@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,10 @@ public class Problem {
 
     @Column(nullable = false, length = 200)
     private String title;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
     @Column(nullable = false, length = 500)
     private String problemUrl;

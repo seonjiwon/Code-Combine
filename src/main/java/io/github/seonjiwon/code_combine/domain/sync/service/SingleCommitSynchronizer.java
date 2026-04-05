@@ -1,11 +1,13 @@
 package io.github.seonjiwon.code_combine.domain.sync.service;
 
 import io.github.seonjiwon.code_combine.domain.problem.dto.ProblemInfo;
+import io.github.seonjiwon.code_combine.domain.problem.entity.ProblemTier;
 import io.github.seonjiwon.code_combine.domain.solution.service.SolutionSyncService;
 import io.github.seonjiwon.code_combine.domain.solution.utils.BaekjoonFilePathParser;
 import io.github.seonjiwon.code_combine.domain.user.entity.User;
 import io.github.seonjiwon.code_combine.global.infra.github.GitHubFetcher;
 import io.github.seonjiwon.code_combine.global.infra.github.dto.GitHubCommitDetail;
+import java.nio.file.Path;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +26,7 @@ public class SingleCommitSynchronizer {
      * 한 개의 커밋 동기화
      */
     public void syncSingleCommit(User user, String token, String owner, String repo,
-                                  String commitSha) {
+                                 String commitSha) {
         // 1. 중복 체크
         if (solutionSyncService.existsByCommitSha(commitSha)) {
             log.debug("이미 동기화된 커밋: {}", commitSha);
@@ -41,13 +43,22 @@ public class SingleCommitSynchronizer {
             return;
         }
 
-        // 4. 파일 경로에서 문제 정보 파싱
-        ProblemInfo problemInfo = filePathParser.parse(sourceCodePath);
+        // 4. README 가져오기
+        String readmePath = findReadmePath(commitDetail.filePaths());
+        String readmeContent = null;
+        ProblemTier tier = null;
+        if (readmePath != null) {
+            readmeContent = fetcher.fetchFileContent(token, owner, repo, readmePath, commitSha);
+            tier = parseTier(readmeContent);
+        }
 
-        // 5. 소스 코드 가져오기
+        // 5. 파일 경로에서 문제 정보 파싱 + README 정보 합침
+        ProblemInfo problemInfo = filePathParser.parse(sourceCodePath, readmeContent, tier);
+
+        // 6. 소스 코드 가져오기
         String sourceCode = fetcher.fetchFileContent(token, owner, repo, sourceCodePath, commitSha);
 
-        // 6. DB 저장
+        // 7. DB 저장
         solutionSyncService.saveSolution(user, problemInfo, sourceCode,
             commitSha, sourceCodePath, commitDetail);
     }
@@ -60,5 +71,39 @@ public class SingleCommitSynchronizer {
                         .filter(path -> !path.endsWith("README.md"))
                         .findFirst()
                         .orElse(null);
+    }
+
+    /**
+     * readMe 경로 찾기
+     */
+    private String findReadmePath(List<String> filePaths) {
+        return filePaths.stream()
+                        .filter(path -> path.endsWith("README.md"))
+                        .findFirst()
+                        .orElse(null);
+    }
+
+    private ProblemTier parseTier(String readmeContent) {
+        if (readmeContent == null || readmeContent.isBlank()) {
+            return null;
+        }
+
+        String firstLine = readmeContent.split("\n")[0];
+        int start = firstLine.indexOf('[');
+        int end = firstLine.indexOf(']');
+        if (start == -1 || end == -1) {
+            return null;
+        }
+
+        String tierStr = firstLine.substring(start + 1, end).trim();
+        return convertToTier(tierStr);
+    }
+
+    private ProblemTier convertToTier(String tierStr) {
+        try {
+            return ProblemTier.valueOf(tierStr.replace(" ", "_").toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return ProblemTier.UNRATED;
+        }
     }
 }

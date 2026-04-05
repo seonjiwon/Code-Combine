@@ -42,7 +42,7 @@ public class SolutionSyncService {
         Solution solution = Solution.builder()
                                     .user(user)
                                     .problem(problem)
-                                    .language(problemInfo.getLanguage())
+                                    .language(problemInfo.language())
                                     .sourceCode(sourceCode)
                                     .commitSha(commitSha)
                                     .filePath(sourceCodePath)

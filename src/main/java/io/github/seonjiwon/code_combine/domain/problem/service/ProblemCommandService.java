@@ -17,12 +17,11 @@ public class ProblemCommandService {
     private final ProblemRepository problemRepository;
 
     /**
-     * 문제 조회 또는 생성
-     * 문제 번호로 문제를 조회하고, 없으면 새로 생성합니다.
+     * 문제 조회 또는 생성 문제 번호로 문제를 조회하고, 없으면 새로 생성합니다.
      */
     public Problem findOrCreateProblem(ProblemInfo problemInfo) {
-        return problemRepository.findByProblemNumber(problemInfo.getProblemNumber())
-            .orElseGet(() -> createProblem(problemInfo));
+        return problemRepository.findByProblemNumber(problemInfo.problemNumber())
+                                .orElseGet(() -> createProblem(problemInfo));
     }
 
     /**
@@ -30,13 +29,16 @@ public class ProblemCommandService {
      */
     private Problem createProblem(ProblemInfo problemInfo) {
         Problem problem = Problem.builder()
-            .problemNumber(problemInfo.getProblemNumber())
-            .title(problemInfo.getTitle())
-            .problemUrl(buildProblemUrl(problemInfo.getProblemNumber()))
-            .build();
+                                 .problemNumber(problemInfo.problemNumber())
+                                 .title(problemInfo.title())
+                                 .problemUrl(buildProblemUrl(problemInfo.problemNumber()))
+                                 .tier(problemInfo.tier())
+                                 .description(problemInfo.readmeContent())
+                                 .build();
 
         Problem savedProblem = problemRepository.save(problem);
-        log.debug("새로운 문제 생성: 번호={}, 제목={}", savedProblem.getProblemNumber(), savedProblem.getTitle());
+        log.debug("새로운 문제 생성: 번호={}, 제목={}", savedProblem.getProblemNumber(),
+            savedProblem.getTitle());
 
         return savedProblem;
     }

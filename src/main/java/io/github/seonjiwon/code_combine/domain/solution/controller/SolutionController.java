@@ -10,13 +10,16 @@ import io.github.seonjiwon.code_combine.global.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -50,10 +53,12 @@ public class SolutionController {
     @GetMapping("/dashboard")
     @Operation(
         summary = "주간 커밋 통계 조회",
-        description = "이번 주 일~토 기준으로 날짜별 사용자 커밋 수를 조회합니다."
+        description = "날짜별 사용자 커밋 수를 조회합니다."
     )
-    public ResponseEntity<CustomResponse<WeeklyCommitInfo>> getWeeklyCommitInfo() {
-        WeeklyCommitInfo weeklyCommitInfo = commitQueryService.getWeeklyCommitInfo();
+    public ResponseEntity<CustomResponse<WeeklyCommitInfo>> getWeeklyCommitInfo(
+        @RequestParam LocalDate startDate
+    ) {
+        WeeklyCommitInfo weeklyCommitInfo = commitQueryService.getWeeklyCommitInfo(startDate);
         return ResponseEntity.ok(CustomResponse.onSuccess(weeklyCommitInfo));
     }
 

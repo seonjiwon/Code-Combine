@@ -35,11 +35,9 @@ public class CommitQueryService {
      * - 기존: DailyUserCommitCountProjection (GROUP BY + COUNT 집계 프로젝션)
      * - 변경: fetch join으로 Solution + User를 가져와서 Java에서 집계
      */
-    public WeeklyCommitInfo getWeeklyCommitInfo() {
+    public WeeklyCommitInfo getWeeklyCommitInfo(LocalDate startDate) {
         // 1. 이번 주 날짜 범위 계산
-        LocalDate[] weekRange = calculateWeekRange();
-        LocalDate startDate = weekRange[0];
-        LocalDate endDate = weekRange[1];
+        LocalDate endDate = startDate.plusDays(7);
 
         LocalDateTime start = startDate.atStartOfDay(KST).toLocalDateTime();
         LocalDateTime end = endDate.atStartOfDay(KST).toLocalDateTime();
@@ -54,13 +52,6 @@ public class CommitQueryService {
 
         // 4. 응답 DTO 변환
         return convertWeeklyStats(startDate, grouped);
-    }
-
-    private LocalDate[] calculateWeekRange() {
-        LocalDate today = LocalDate.now(KST);
-        LocalDate sunday = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
-        LocalDate nextSunday = sunday.plusDays(7);
-        return new LocalDate[]{sunday, nextSunday};
     }
 
     /**

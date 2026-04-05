@@ -2,6 +2,7 @@ package io.github.seonjiwon.code_combine.domain.solution.service;
 
 import static io.github.seonjiwon.code_combine.domain.solution.dto.SolutionResponse.*;
 
+import io.github.seonjiwon.code_combine.domain.problem.entity.Problem;
 import io.github.seonjiwon.code_combine.domain.solution.code.SolutionErrorCode;
 import io.github.seonjiwon.code_combine.domain.solution.dto.SolutionResponse;
 import io.github.seonjiwon.code_combine.domain.solution.dto.SolutionResponse.Submission;
@@ -49,7 +50,13 @@ public class SolutionQueryService {
                                                               .build())
                                                 .toList();
 
+        // 3. 문제 정보 가져오기
+        Problem problem = solutions.get(0).getProblem();
+
         return Detail.builder()
+                     .problemName(problem.getTitle())
+                     .tier(problem.getTier())
+                     .problemUrl(problem.getProblemUrl())
                      .submissions(submissions)
                      .build();
     }

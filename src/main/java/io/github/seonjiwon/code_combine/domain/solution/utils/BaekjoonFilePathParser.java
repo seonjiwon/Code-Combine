@@ -1,5 +1,6 @@
 package io.github.seonjiwon.code_combine.domain.solution.utils;
 
+import io.github.seonjiwon.code_combine.domain.problem.entity.ProblemTier;
 import io.github.seonjiwon.code_combine.domain.solution.code.SolutionErrorCode;
 import io.github.seonjiwon.code_combine.domain.problem.dto.ProblemInfo;
 import io.github.seonjiwon.code_combine.global.exception.CustomException;
@@ -13,7 +14,7 @@ public class BaekjoonFilePathParser {
     /**
      * 파일 경로에서 문제 정보 추출
      */
-    public ProblemInfo parse(String filePath) {
+    public ProblemInfo parse(String filePath, String readmeContent, ProblemTier tier) {
         validateFilePath(filePath);
 
         try {
@@ -28,6 +29,8 @@ public class BaekjoonFilePathParser {
                 .problemNumber(problemNumber)
                 .title(title)
                 .language(language)
+                .readmeContent(readmeContent)
+                .tier(tier)
                 .build();
         } catch (Exception e) {
             log.error("파일 경로 파싱 실패: {}", filePath, e);
