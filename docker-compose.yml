@@ -13,7 +13,6 @@ services:
       - GH_CLIENT_ID=${GH_CLIENT_ID}
       - GH_CLIENT_SECRET=${GH_CLIENT_SECRET}
       - JWT_SECRET=${JWT_SECRET}
-      - JWT_EXPIRATION=${JWT_EXPIRATION}
       - FRONTEND_URL=${FRONTEND_URL}
     volumes:
       - /home/ec2-user/logs/code-combine:/app/logs

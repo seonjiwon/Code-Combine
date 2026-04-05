@@ -2,6 +2,7 @@ package io.github.seonjiwon.code_combine.domain.problem.dto;
 
 
 import io.github.seonjiwon.code_combine.domain.problem.entity.Problem;
+import io.github.seonjiwon.code_combine.domain.problem.entity.ProblemTier;
 import io.github.seonjiwon.code_combine.domain.solution.entity.Solution;
 import java.util.List;
 import lombok.Builder;
@@ -27,6 +28,7 @@ public class ProblemsResponse {
         Long problemId,
         int problemNumber,
         String problemName,
+        ProblemTier tier,
         int solvedUserCount,
         List<SolvedUser> solvedUsers
     ) {
@@ -40,6 +42,7 @@ public class ProblemsResponse {
                             .problemId(problem.getId())
                             .problemNumber(problem.getProblemNumber())
                             .problemName(problem.getTitle())
+                            .tier(problem.getTier())
                             .solvedUserCount(solvedUsers.size())
                             .solvedUsers(solvedUsers)
                             .build();
