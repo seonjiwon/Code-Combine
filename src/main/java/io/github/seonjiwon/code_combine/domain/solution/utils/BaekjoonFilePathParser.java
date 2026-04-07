@@ -31,6 +31,8 @@ public class BaekjoonFilePathParser {
                 .language(language)
                 .tier(tier)
                 .build();
+        } catch (CustomException e) {
+            throw e;
         } catch (Exception e) {
             log.error("파일 경로 파싱 실패: {}", filePath, e);
             throw new CustomException(SolutionErrorCode.INVALID_FILE_PATH);
@@ -103,12 +105,15 @@ public class BaekjoonFilePathParser {
      * 예: Main.java -> java
      */
     private String extractLanguage(String filePath) {
-        int dotIndex = filePath.lastIndexOf('.');
+        int lastSlash = filePath.lastIndexOf('/');
+        String codeName = filePath.substring(lastSlash);
+
+        int dotIndex = codeName.lastIndexOf('.');
 
         if (dotIndex == -1) {
             throw new CustomException(SolutionErrorCode.INVALID_FILE_PATH);
         }
 
-        return filePath.substring(dotIndex + 1);
+        return codeName.substring(dotIndex + 1);
     }
 }

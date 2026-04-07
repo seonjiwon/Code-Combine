@@ -6,11 +6,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import io.github.seonjiwon.code_combine.domain.problem.dto.ProblemInfo;
 import io.github.seonjiwon.code_combine.domain.problem.entity.ProblemTier;
 import io.github.seonjiwon.code_combine.domain.solution.code.SolutionErrorCode;
+import io.github.seonjiwon.code_combine.global.exception.CustomException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 class BaekjoonFilePathParserTest {
 
@@ -89,24 +91,17 @@ class BaekjoonFilePathParserTest {
 
         // when, then
         assertThatThrownBy(() -> parser.parse(filePath, null))
-            .isInstanceOf(SolutionErrorCode.INVALID_FILE_PATH.getClass());
+            .isInstanceOf(CustomException.class)
+            .hasMessage(SolutionErrorCode.INVALID_FILE_PATH.getMessage());
     }
 
-//    @ParameterizedTest
-//    @CsvSource({
-//        "백준/Gold/1000.A+B/.java",
-//        "백준/Gold/1000.A+B/Main",
-//        "백준/Gold/1000./Main.java",
-//        "백준/Gold/A+B/Main.java"
-//    })
-//    @DisplayName("정상경로 정상 파싱")
-//    void successfulParsingWithoutNormalPath(String filePath) throws Exception {
-//        // given
-//        ProblemTier tier = ProblemTier.GOLD_V;
-//        // when
-//        ProblemInfo result = parser.parse(filePath, tier);
-//
-//        // then
-//
-//    }
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("널 혹은 빈값이 넘어올 경우 에러를 발생시킨다.")
+    void throwExceptionInputIsNullOrEmpty(String filePath) throws Exception{
+        // when, then
+        assertThatThrownBy(() -> parser.parse(filePath, null))
+            .isInstanceOf(CustomException.class)
+            .hasMessage(SolutionErrorCode.INVALID_FILE_PATH.getMessage());
+    }
 }
